@@ -1,0 +1,354 @@
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/actionbarr"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="#3E2611">
+
+                <LinearLayout
+                    android:id="@+id/ll_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="10dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/img_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/back"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/slidingnow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="10dp">
+
+                    <LinearLayout
+                        android:id="@+id/ll_pipe_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="15dp"
+                            android:layout_height="2dp"
+                            android:background="#ffffff">
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="25dp"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="6dp"
+                            android:background="#ffffff">
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="15dp"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="6dp"
+                            android:background="#ffffff">
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_msgcontainer"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="4dp">
+
+                    <ImageView
+                        android:id="@+id/img_msg"
+                        android:layout_width="28dp"
+                        android:layout_height="20dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/message"/>
+
+                    <TextView
+                        android:id="@+id/txt_msg_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/notification_gole"
+                        android:padding="4dp"
+                        android:text="20"
+                        android:textColor="#ffffff"
+                        android:textSize="6sp"/>
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txt_page_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="Main Screen"
+                    android:textColor="#ffffff"
+                    android:textSize="18sp"/>
+            </RelativeLayout>
+
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/actionbarr">
+            </FrameLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_drawer"
+        android:layout_width="220dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/side_menu_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+
+            <TextView
+                android:id="@+id/textView1menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:text="Menu"
+                android:textColor="#ffffff"
+                android:textSize="24sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_profile"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/select"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="34dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/profilemenu"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Profile"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_store_now"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="34dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/store"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Store Now"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_chat_room"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="34dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/chatroom"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Chat Room"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_store_map"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="34dp">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="18dp"
+                android:background="@drawable/storemap"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Store map"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_add_coupon"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="34dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="12dp"
+                android:background="@drawable/addcouponmenu"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Add Coupon"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_friend_request"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="34dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/profilemenu"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Friend Request"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_settings"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="34dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/settings"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Settings"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_about"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="34dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/aboutmenu"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="About"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_logout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="34dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/aboutmenu"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Logout"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>
