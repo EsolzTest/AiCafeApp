@@ -14,7 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.esolz.aicafeapp.Helper.AppData;
+import com.esolz.aicafeapp.Helper.Trns;
 import com.esolz.aicafeapp.R;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by ltp on 08/07/15.
@@ -28,6 +31,11 @@ public class FragmentProfile extends Fragment {
     TextView txtPageTitle, txtMSGCounter;
     ImageView imgBack, imgMSG;
     DrawerLayout drawerLayout;
+
+    ImageView imgProfile;
+    LinearLayout llEdit;
+    TextView txtProfileName, txtAge, txtGender, txtStatus;
+
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -65,6 +73,25 @@ public class FragmentProfile extends Fragment {
         txtMSGCounter.setVisibility(View.GONE);
 
         txtPageTitle.setText("Profile");
+
+        ImageView imgProfile;
+        LinearLayout llEdit;
+        TextView txtProfileName, txtAge, txtGender, txtStatus;
+
+        imgProfile = (ImageView) view.findViewById(R.id.img_profile);
+        llEdit = (LinearLayout) view.findViewById(R.id.ll_edit);
+        txtProfileName = (TextView) view.findViewById(R.id.txt_profile_name);
+        txtAge = (TextView) view.findViewById(R.id.txt_age);
+        txtGender = (TextView) view.findViewById(R.id.txt_gender);
+        txtStatus = (TextView) view.findViewById(R.id.txt_status);
+
+        txtProfileName.setText(AppData.loginDataType.getName());
+        txtAge.setText("Age : " + AppData.loginDataType.getAge());
+        txtGender.setText(AppData.loginDataType.getSex());
+        txtStatus.setText(AppData.loginDataType.getAbout());
+
+        Picasso.with(getActivity()).load("http://www.esolz.co.in/lab9/aiCafe/" + AppData.loginDataType.getPhoto())
+                .transform(new Trns()).into(imgProfile);
 
         llLoyaltyPoints.setOnClickListener(new View.OnClickListener() {
             @Override

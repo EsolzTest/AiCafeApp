@@ -15,7 +15,7 @@
         android:paddingBottom="10dp">
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/img_profile"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_marginLeft="10dp"
@@ -72,26 +72,41 @@
                 android:textSize="16sp">
             </EditText>
 
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/button_bg"
-                android:gravity="center"
-                android:text="Login"
-                android:textColor="#ffffff"
-                android:textSize="18sp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/button_bg"
+                    android:gravity="center"
+                    android:text="Login"
+                    android:textColor="#ffffff"
+                    android:textSize="18sp"/>
+
+                <ProgressBar
+                    android:id="@+id/pbar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"/>
+
+            </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/txt_forgot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="2dp"
                 android:paddingTop="10dp"
-                android:gravity="center"
                 android:text="Forgot Password"
                 android:textColor="#250F00"/>
         </LinearLayout>
@@ -103,7 +118,7 @@
             android:paddingBottom="10dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
-            android:paddingTop="35dp">
+            android:paddingTop="15dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -114,7 +129,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -123,13 +139,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="2dp">
 
                     <TextView
                         android:id="@+id/textView12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:clickable="false"
+                        android:gravity="center"
+                        android:longClickable="false"
                         android:text="Sign Up"
                         android:textColor="#250F00"
                         android:textSize="20sp"/>
@@ -139,48 +159,50 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         android:clickable="false"
+                        android:gravity="center"
+                        android:longClickable="false"
                         android:text="Create AiCafe account"
                         android:textColor="#250F00"
                         android:textSize="12sp"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_fblogin"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingLeft="6dp">
+                <!--<LinearLayout-->
+                <!--android:id="@+id/ll_fblogin"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:orientation="vertical"-->
+                <!--android:paddingLeft="6dp">-->
 
-                    <TextView
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Login With"
-                        android:textColor="#250F00"
-                        android:textSize="20sp"/>
+                <!--<TextView-->
+                <!--android:id="@+id/textView1"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Login With"-->
+                <!--android:textColor="#250F00"-->
+                <!--android:textSize="20sp"/>-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="4dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="horizontal">-->
 
-                        <ImageView
-                            android:id="@+id/imageView2"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:background="@drawable/facebook"/>
+                <!--<ImageView-->
+                <!--android:id="@+id/imageView2"-->
+                <!--android:layout_width="18dp"-->
+                <!--android:layout_height="18dp"-->
+                <!--android:background="@drawable/facebook"/>-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="   Facebook"
-                            android:textColor="#250F00"
-                            android:textSize="12sp"/>
-                    </LinearLayout>
-                </LinearLayout>
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="   Facebook"-->
+                <!--android:textColor="#250F00"-->
+                <!--android:textSize="12sp"/>-->
+                <!--</LinearLayout>-->
+                <!--</LinearLayout>-->
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -65,6 +65,10 @@ public class FragmentAbout extends Fragment {
         txtMSGCounter.setVisibility(View.GONE);
 
         txtPageTitle.setText("About");
+        imgMSG.setBackgroundResource(R.drawable.more);
+        imgMSG.getLayoutParams().height = 45;
+        imgMSG.getLayoutParams().width = 12;
+        imgMSG.requestLayout();
 
         return view;
     }

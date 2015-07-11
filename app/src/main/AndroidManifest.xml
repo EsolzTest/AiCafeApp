@@ -4,6 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name="com.esolz.aicafeapp.Helper.AppController"
@@ -28,9 +32,20 @@
         </activity>
 
         <activity
+            android:name=".ActivitySignUp"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name=".ActivityLandingPage"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".EsolzCamera"
+            android:label="@string/app_name">
         </activity>
     </application>
 
