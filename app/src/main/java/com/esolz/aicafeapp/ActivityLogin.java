@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText;
 import com.esolz.aicafeapp.Datatype.LoginDataType;
 import com.esolz.aicafeapp.Helper.AppController;
 import com.esolz.aicafeapp.Helper.AppData;
@@ -29,7 +30,7 @@ import org.json.JSONObject;
  */
 public class ActivityLogin extends AppCompatActivity {
 
-    EditText etEmail, etPassword;
+    OpenSansSemiboldEditText etEmail, etPassword;
     Button btnLogin;
     LinearLayout llSignup, llFBLogin;
     ProgressBar pBar;
@@ -46,12 +47,15 @@ public class ActivityLogin extends AppCompatActivity {
 
         cd = new ConnectionDetector(ActivityLogin.this);
 
-        etEmail = (EditText) findViewById(R.id.et_email);
-        etPassword = (EditText) findViewById(R.id.et_password);
+        etEmail = (OpenSansSemiboldEditText) findViewById(R.id.et_email);
+        etPassword = (OpenSansSemiboldEditText) findViewById(R.id.et_password);
         btnLogin = (Button) findViewById(R.id.btn_login);
         llSignup = (LinearLayout) findViewById(R.id.ll_signup);
         //llFBLogin = (LinearLayout) findViewById(R.id.ll_fblogin);
         pBar = (ProgressBar) findViewById(R.id.pbar);
+
+        etEmail.setText("soutrik@esolzmail.com");
+        etPassword.setText("123456");
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

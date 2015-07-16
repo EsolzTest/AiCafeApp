@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
+import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
 import com.esolz.aicafeapp.R;
 
 /**
@@ -22,15 +24,17 @@ import com.esolz.aicafeapp.R;
 public class FragmentStoreNow extends Fragment {
 
     View view;
-    LinearLayout llLoyaltyPoints, llCoupons, llAiCafeFriends;
-    LinearLayout llPipeContainer, slidingNow, llBack;
+    LinearLayout llPipeContainer, slidingNow, llBack, profileDrawer;
     RelativeLayout rlMSGContainer;
-    TextView txtPageTitle, txtMSGCounter;
+    OpenSansSemiboldTextView txtPageTitle;
+    OpenSansRegularTextView txtMSGCounter;
     ImageView imgBack, imgMSG;
     DrawerLayout drawerLayout;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+
+    LinearLayout llStoreName, llHereNow, llStoreOffer, llFbLike;
 
     @Nullable
     @Override
@@ -39,21 +43,51 @@ public class FragmentStoreNow extends Fragment {
 
         fragmentManager = getFragmentManager();
 
-        llLoyaltyPoints = (LinearLayout) view.findViewById(R.id.ll_loyalty_points);
-        llCoupons = (LinearLayout) view.findViewById(R.id.ll_coupons);
-        llAiCafeFriends = (LinearLayout) view.findViewById(R.id.ll_aicafe_friends);
-
         llPipeContainer = (LinearLayout) getActivity().findViewById(R.id.ll_pipe_container);
         slidingNow = (LinearLayout) getActivity().findViewById(R.id.slidingnow);
         rlMSGContainer = (RelativeLayout) getActivity().findViewById(R.id.rl_msgcontainer);
-        txtPageTitle = (TextView) getActivity().findViewById(R.id.txt_page_title);
+        txtPageTitle = (OpenSansSemiboldTextView) getActivity().findViewById(R.id.txt_page_title);
         imgBack = (ImageView) getActivity().findViewById(R.id.img_back);
         llBack = (LinearLayout) getActivity().findViewById(R.id.ll_back);
-        txtMSGCounter = (TextView) getActivity().findViewById(R.id.txt_msg_counter);
+        txtMSGCounter = (OpenSansRegularTextView) getActivity().findViewById(R.id.txt_msg_counter);
         imgMSG = (ImageView) getActivity().findViewById(R.id.img_msg);
 
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        // drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        profileDrawer = (LinearLayout) getActivity().findViewById(R.id.profile_drawer);
+        //drawerLayout.closeDrawer(profileDrawer);
+
+
+        llStoreName = (LinearLayout) view.findViewById(R.id.ll_store_name);
+        llHereNow = (LinearLayout) view.findViewById(R.id.ll_here_now);
+        llStoreOffer = (LinearLayout) view.findViewById(R.id.ll_store_offer);
+        llFbLike = (LinearLayout) view.findViewById(R.id.ll_fb_like);
+
+        llStoreName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        llHereNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        llStoreOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        llFbLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
         llPipeContainer.setVisibility(View.VISIBLE);
         slidingNow.setVisibility(View.VISIBLE);
@@ -63,6 +97,8 @@ public class FragmentStoreNow extends Fragment {
         llBack.setVisibility(View.GONE);
         imgMSG.setVisibility(View.VISIBLE);
         txtMSGCounter.setVisibility(View.GONE);
+
+        imgMSG.setBackgroundResource(R.drawable.chat);
 
         txtPageTitle.setText("Store Now");
 

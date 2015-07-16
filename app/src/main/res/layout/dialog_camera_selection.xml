@@ -2,11 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="210dp"
+    android:layout_height="wrap_content"
     android:background="#FFFFFF"
     android:padding="10dp">
 
-    <TextView
+    <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
         android:id="@+id/selecttion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         android:gravity="center"
         android:padding="10dp">
 
-        <TextView
+        <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="GALLERY"
@@ -45,7 +45,7 @@
         android:gravity="center"
         android:padding="10dp">
 
-        <TextView
+        <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CAMERA"
@@ -64,7 +64,7 @@
         android:gravity="center"
         android:padding="10dp">
 
-        <TextView
+        <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CANCEL"

@@ -14,7 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
+import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
 import com.esolz.aicafeapp.Helper.AppData;
+import com.esolz.aicafeapp.Helper.CircleTransform;
 import com.esolz.aicafeapp.Helper.Trns;
 import com.esolz.aicafeapp.R;
 import com.squareup.picasso.Picasso;
@@ -26,16 +29,17 @@ public class FragmentProfile extends Fragment {
 
     View view;
     LinearLayout llLoyaltyPoints, llCoupons, llAiCafeFriends;
-    LinearLayout llPipeContainer, slidingNow, llBack;
+    LinearLayout llPipeContainer, slidingNow, llBack, profileDrawer;
     RelativeLayout rlMSGContainer;
-    TextView txtPageTitle, txtMSGCounter;
+    OpenSansSemiboldTextView txtPageTitle;
+    OpenSansRegularTextView txtMSGCounter;
     ImageView imgBack, imgMSG;
     DrawerLayout drawerLayout;
 
     ImageView imgProfile;
     LinearLayout llEdit;
-    TextView txtProfileName, txtAge, txtGender, txtStatus;
-
+    OpenSansSemiboldTextView txtProfileName;
+    OpenSansRegularTextView txtAge, txtGender, txtStatus;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -54,14 +58,16 @@ public class FragmentProfile extends Fragment {
         llPipeContainer = (LinearLayout) getActivity().findViewById(R.id.ll_pipe_container);
         slidingNow = (LinearLayout) getActivity().findViewById(R.id.slidingnow);
         rlMSGContainer = (RelativeLayout) getActivity().findViewById(R.id.rl_msgcontainer);
-        txtPageTitle = (TextView) getActivity().findViewById(R.id.txt_page_title);
+        txtPageTitle = (OpenSansSemiboldTextView) getActivity().findViewById(R.id.txt_page_title);
         imgBack = (ImageView) getActivity().findViewById(R.id.img_back);
         llBack = (LinearLayout) getActivity().findViewById(R.id.ll_back);
-        txtMSGCounter = (TextView) getActivity().findViewById(R.id.txt_msg_counter);
+        txtMSGCounter = (OpenSansRegularTextView) getActivity().findViewById(R.id.txt_msg_counter);
         imgMSG = (ImageView) getActivity().findViewById(R.id.img_msg);
 
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        // drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        profileDrawer = (LinearLayout) getActivity().findViewById(R.id.profile_drawer);
+        //drawerLayout.closeDrawer(profileDrawer);
 
         llPipeContainer.setVisibility(View.VISIBLE);
         slidingNow.setVisibility(View.VISIBLE);
@@ -71,27 +77,28 @@ public class FragmentProfile extends Fragment {
         llBack.setVisibility(View.GONE);
         imgMSG.setVisibility(View.VISIBLE);
         txtMSGCounter.setVisibility(View.GONE);
-
         txtPageTitle.setText("Profile");
 
-        ImageView imgProfile;
-        LinearLayout llEdit;
-        TextView txtProfileName, txtAge, txtGender, txtStatus;
+        imgMSG.setBackgroundResource(R.drawable.message);
 
         imgProfile = (ImageView) view.findViewById(R.id.img_profile);
         llEdit = (LinearLayout) view.findViewById(R.id.ll_edit);
-        txtProfileName = (TextView) view.findViewById(R.id.txt_profile_name);
-        txtAge = (TextView) view.findViewById(R.id.txt_age);
-        txtGender = (TextView) view.findViewById(R.id.txt_gender);
-        txtStatus = (TextView) view.findViewById(R.id.txt_status);
+        txtProfileName = (OpenSansSemiboldTextView) view.findViewById(R.id.txt_profile_name);
+        txtAge = (OpenSansRegularTextView) view.findViewById(R.id.txt_age);
+        txtGender = (OpenSansRegularTextView) view.findViewById(R.id.txt_gender);
+        txtStatus = (OpenSansRegularTextView) view.findViewById(R.id.txt_status);
 
         txtProfileName.setText(AppData.loginDataType.getName());
         txtAge.setText("Age : " + AppData.loginDataType.getAge());
-        txtGender.setText(AppData.loginDataType.getSex());
+        if (AppData.loginDataType.getSex().equals("M")) {
+            txtGender.setText("Male");
+        } else {
+            txtGender.setText("Female");
+        }
         txtStatus.setText(AppData.loginDataType.getAbout());
 
         Picasso.with(getActivity()).load("http://www.esolz.co.in/lab9/aiCafe/" + AppData.loginDataType.getPhoto())
-                .transform(new Trns()).into(imgProfile);
+                .transform(new CircleTransform()).into(imgProfile);
 
         llLoyaltyPoints.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +126,16 @@ public class FragmentProfile extends Fragment {
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentAiCafeFriends fragmentAiCafeFriends = new FragmentAiCafeFriends();
                 fragmentTransaction.replace(R.id.fragment_container, fragmentAiCafeFriends);
+                fragmentTransaction.commit();
+            }
+        });
+
+        rlMSGContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentInbox fragmentInbox = new FragmentInbox();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentInbox);
                 fragmentTransaction.commit();
             }
         });

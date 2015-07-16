@@ -30,7 +30,7 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/logo"/>
 
-                <TextView
+                <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
                     android:id="@+id/txt_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                     android:paddingRight="14dp"
                     android:text="Version 1.0.1"
                     android:textColor="#FFFFFF"
-                    android:textSize="17sp"/>
+                    android:textSize="14sp"/>
             </RelativeLayout>
 
             <LinearLayout
@@ -49,19 +49,19 @@
                 android:layout_marginTop="8dp"
                 android:orientation="vertical">
 
-                <TextView
+                <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
                     android:id="@+id/txt_about"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="About Us"
                     android:textColor="#FFFFFF"
-                    android:textSize="23sp"/>
+                    android:textSize="20sp"/>
 
-                <TextView
+                <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
                     android:id="@+id/txt_about_details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="4dp"
                     android:text="Lorem  only five centuries, mtially test small unchanged.'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. "
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"/>
@@ -73,28 +73,28 @@
                 android:layout_marginTop="8dp"
                 android:orientation="vertical">
 
-                <TextView
+                <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
                     android:id="@+id/txt_faq"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="FAQ"
                     android:textColor="#FFFFFF"
-                    android:textSize="23sp"/>
+                    android:textSize="20sp"/>
 
-                <TextView
+                <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
                     android:id="@+id/txt_faq_details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="4dp"
                     android:text="It has survived not  the leap into electronic typesetting, remaining an  unchanged."
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"/>
 
-                <TextView
+                <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
                     android:id="@+id/txt_faq_details1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
+                    android:layout_marginTop="5dp"
                     android:text="It has survived not  the leap into electronic typesetting, remaining an  unchanged."
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"/>
@@ -107,13 +107,13 @@
 
                 <ImageView
                     android:id="@+id/img_rate"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/rate"/>
 
-                <TextView
+                <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
                     android:id="@+id/txt_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                     android:layout_centerHorizontal="true"
                     android:text="RATE"
                     android:textColor="#6C2E00"
-                    android:textSize="25sp"/>
+                    android:textSize="20sp"/>
             </RelativeLayout>
 
         </LinearLayout>

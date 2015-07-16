@@ -19,11 +19,11 @@ import com.esolz.aicafeapp.R;
 /**
  * Created by ltp on 08/07/15.
  */
-public class FragmentChatRoom  extends Fragment {
+public class FragmentChatRoom extends Fragment {
 
     View view;
     LinearLayout llLoyaltyPoints, llCoupons, llAiCafeFriends;
-    LinearLayout llPipeContainer, slidingNow, llBack;
+    LinearLayout llPipeContainer, slidingNow, llBack, profileDrawer;
     RelativeLayout rlMSGContainer;
     TextView txtPageTitle, txtMSGCounter;
     ImageView imgBack, imgMSG;
@@ -53,7 +53,9 @@ public class FragmentChatRoom  extends Fragment {
         imgMSG = (ImageView) getActivity().findViewById(R.id.img_msg);
 
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        profileDrawer = (LinearLayout) getActivity().findViewById(R.id.profile_drawer);
+        //drawerLayout.closeDrawer(profileDrawer);
 
         llPipeContainer.setVisibility(View.VISIBLE);
         slidingNow.setVisibility(View.VISIBLE);

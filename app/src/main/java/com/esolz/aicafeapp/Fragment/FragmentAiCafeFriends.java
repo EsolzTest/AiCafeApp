@@ -11,10 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.esolz.aicafeapp.Adapter.FriendAdapter;
+import com.esolz.aicafeapp.Adapter.InboxAdapter;
 import com.esolz.aicafeapp.R;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by ltp on 08/07/15.
@@ -30,6 +37,11 @@ public class FragmentAiCafeFriends extends Fragment {
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+
+    ListView listFriend;
+    ProgressBar pbarFriend;
+
+    ArrayList<HashMap<String, String>> data;
 
     @Nullable
     @Override
@@ -48,7 +60,18 @@ public class FragmentAiCafeFriends extends Fragment {
         imgMSG = (ImageView) getActivity().findViewById(R.id.img_msg);
 
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+        data = new ArrayList<HashMap<String, String>>();
+        listFriend = (ListView) view.findViewById(R.id.list_friend);
+
+        for (int i = 0; i < 7; i++) {
+            HashMap<String, String> hMap = new HashMap<String, String>();
+            hMap.put("value", "" + i);
+            data.add(hMap);
+        }
+        FriendAdapter friendAdapter = new FriendAdapter(getActivity(), 0, 0, data);
+        listFriend.setAdapter(friendAdapter);
 
         llPipeContainer.setVisibility(View.GONE);
         slidingNow.setVisibility(View.GONE);

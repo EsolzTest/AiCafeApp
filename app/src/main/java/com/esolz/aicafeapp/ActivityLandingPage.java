@@ -1,6 +1,8 @@
 package com.esolz.aicafeapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -11,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
+import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
 import com.esolz.aicafeapp.Fragment.FragmentAbout;
 import com.esolz.aicafeapp.Fragment.FragmentAddCoupon;
 import com.esolz.aicafeapp.Fragment.FragmentChatRoom;
@@ -29,7 +33,8 @@ public class ActivityLandingPage extends AppCompatActivity {
             llStoreMap, llAddCoupon, llFriendRequest, llSettings, llAbout, llLogout,
             llPipeContainer, llBack;
     RelativeLayout rlMSGContainer;
-    TextView txtPageTitle, txtMSGCounter;
+    OpenSansSemiboldTextView txtPageTitle;
+    OpenSansRegularTextView txtMSGCounter;
     ImageView imgBack;
 
     DrawerLayout drawerLayout;
@@ -45,12 +50,12 @@ public class ActivityLandingPage extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
 
-        llPipeContainer = (LinearLayout)findViewById(R.id.ll_pipe_container);
+        llPipeContainer = (LinearLayout) findViewById(R.id.ll_pipe_container);
         rlMSGContainer = (RelativeLayout) findViewById(R.id.rl_msgcontainer);
-        txtPageTitle = (TextView) findViewById(R.id.txt_page_title);
+        txtPageTitle = (OpenSansSemiboldTextView) findViewById(R.id.txt_page_title);
         imgBack = (ImageView) findViewById(R.id.img_back);
         llBack = (LinearLayout) findViewById(R.id.ll_back);
-        txtMSGCounter = (TextView)findViewById(R.id.txt_msg_counter);
+        txtMSGCounter = (OpenSansRegularTextView) findViewById(R.id.txt_msg_counter);
 
         slidingNow = (LinearLayout) findViewById(R.id.slidingnow);
         profileDrawer = (LinearLayout) findViewById(R.id.profile_drawer);
@@ -92,12 +97,25 @@ public class ActivityLandingPage extends AppCompatActivity {
                 llAbout.setBackgroundResource(0);
                 llLogout.setBackgroundResource(0);
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentProfile fragmentProfile = new FragmentProfile();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
-                fragmentTransaction.commit();
+                new Handler().postDelayed(new Runnable() {
 
-                drawerLayout.closeDrawer(profileDrawer);
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentProfile fragmentProfile = new FragmentProfile();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
+                        fragmentTransaction.commit();
+                    }
+                }, 300);
+
+                //drawerLayout.closeDrawer(profileDrawer);
+                llProfile.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(profileDrawer);
+                    }
+                });
             }
         });
 
@@ -114,12 +132,24 @@ public class ActivityLandingPage extends AppCompatActivity {
                 llAbout.setBackgroundResource(0);
                 llLogout.setBackgroundResource(0);
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentStoreNow fragmentStoreNow = new FragmentStoreNow();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentStoreNow);
-                fragmentTransaction.commit();
+                new Handler().postDelayed(new Runnable() {
 
-                drawerLayout.closeDrawer(profileDrawer);
+                    @Override
+                    public void run() {
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentStoreNow fragmentStoreNow = new FragmentStoreNow();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentStoreNow);
+                        fragmentTransaction.commit();
+                    }
+                }, 300);
+
+                //drawerLayout.closeDrawer(profileDrawer);
+                llStoreNow.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(profileDrawer);
+                    }
+                });
             }
         });
 
@@ -136,12 +166,25 @@ public class ActivityLandingPage extends AppCompatActivity {
                 llAbout.setBackgroundResource(0);
                 llLogout.setBackgroundResource(0);
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentChatRoom fragmentChatRoom = new FragmentChatRoom();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentChatRoom);
-                fragmentTransaction.commit();
+                new Handler().postDelayed(new Runnable() {
 
-                drawerLayout.closeDrawer(profileDrawer);
+                    @Override
+                    public void run() {
+
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentChatRoom fragmentChatRoom = new FragmentChatRoom();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentChatRoom);
+                        fragmentTransaction.commit();
+                    }
+                }, 300);
+
+                //drawerLayout.closeDrawer(profileDrawer);
+                llChatRoom.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(profileDrawer);
+                    }
+                });
             }
         });
 
@@ -158,14 +201,28 @@ public class ActivityLandingPage extends AppCompatActivity {
                 llAbout.setBackgroundResource(0);
                 llLogout.setBackgroundResource(0);
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentStoreMap fragmentStoreMap = new FragmentStoreMap();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentStoreMap);
-                fragmentTransaction.commit();
+                new Handler().postDelayed(new Runnable() {
 
-                drawerLayout.closeDrawer(profileDrawer);
+                    @Override
+                    public void run() {
+
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentStoreMap fragmentStoreMap = new FragmentStoreMap();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentStoreMap);
+                        fragmentTransaction.commit();
+                    }
+                }, 300);
+
+                // drawerLayout.closeDrawer(profileDrawer);
+                llStoreMap.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(profileDrawer);
+                    }
+                });
             }
         });
+
 
         llAddCoupon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,12 +237,25 @@ public class ActivityLandingPage extends AppCompatActivity {
                 llAbout.setBackgroundResource(0);
                 llLogout.setBackgroundResource(0);
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentAddCoupon fragmentAddCoupon = new FragmentAddCoupon();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentAddCoupon);
-                fragmentTransaction.commit();
+                new Handler().postDelayed(new Runnable() {
 
-                drawerLayout.closeDrawer(profileDrawer);
+                    @Override
+                    public void run() {
+
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentAddCoupon fragmentAddCoupon = new FragmentAddCoupon();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentAddCoupon);
+                        fragmentTransaction.commit();
+                    }
+                }, 300);
+
+                //drawerLayout.closeDrawer(profileDrawer);
+                llAddCoupon.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(profileDrawer);
+                    }
+                });
             }
         });
 
@@ -202,12 +272,25 @@ public class ActivityLandingPage extends AppCompatActivity {
                 llAbout.setBackgroundResource(0);
                 llLogout.setBackgroundResource(0);
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentFriendRequest fragmentFriendRequest = new FragmentFriendRequest();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentFriendRequest);
-                fragmentTransaction.commit();
+                new Handler().postDelayed(new Runnable() {
 
-                drawerLayout.closeDrawer(profileDrawer);
+                    @Override
+                    public void run() {
+
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentFriendRequest fragmentFriendRequest = new FragmentFriendRequest();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentFriendRequest);
+                        fragmentTransaction.commit();
+                    }
+                }, 300);
+
+                // drawerLayout.closeDrawer(profileDrawer);
+                llFriendRequest.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(profileDrawer);
+                    }
+                });
             }
         });
 
@@ -224,12 +307,25 @@ public class ActivityLandingPage extends AppCompatActivity {
                 llAbout.setBackgroundResource(0);
                 llLogout.setBackgroundResource(0);
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentSettings fragmentSettings = new FragmentSettings();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentSettings);
-                fragmentTransaction.commit();
+                new Handler().postDelayed(new Runnable() {
 
-                drawerLayout.closeDrawer(profileDrawer);
+                    @Override
+                    public void run() {
+
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentSettings fragmentSettings = new FragmentSettings();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentSettings);
+                        fragmentTransaction.commit();
+                    }
+                }, 300);
+
+                // drawerLayout.closeDrawer(profileDrawer);
+                llSettings.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(profileDrawer);
+                    }
+                });
             }
         });
 
@@ -246,12 +342,25 @@ public class ActivityLandingPage extends AppCompatActivity {
                 llAbout.setBackgroundResource(R.drawable.select);
                 llLogout.setBackgroundResource(0);
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentAbout fragmentAbout = new FragmentAbout();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentAbout);
-                fragmentTransaction.commit();
+                new Handler().postDelayed(new Runnable() {
 
-                drawerLayout.closeDrawer(profileDrawer);
+                    @Override
+                    public void run() {
+
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentAbout fragmentAbout = new FragmentAbout();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentAbout);
+                        fragmentTransaction.commit();
+                    }
+                }, 300);
+
+                //drawerLayout.closeDrawer(profileDrawer);
+                llAbout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(profileDrawer);
+                    }
+                });
             }
         });
 
@@ -268,9 +377,21 @@ public class ActivityLandingPage extends AppCompatActivity {
                 llAbout.setBackgroundResource(0);
                 llLogout.setBackgroundResource(R.drawable.select);
 
-                //drawerLayout.closeDrawer(profileDrawer);
+                new Handler().postDelayed(new Runnable() {
 
-                finish();
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 300);
+
+                //drawerLayout.closeDrawer(profileDrawer);
+                llAbout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(profileDrawer);
+                    }
+                });
             }
         });
 

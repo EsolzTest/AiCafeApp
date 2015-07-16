@@ -39,10 +39,10 @@
             android:paddingRight="50dp"
             android:paddingTop="15dp">
 
-            <EditText
+            <com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="40dp"
                 android:background="@drawable/inputfield"
                 android:ems="10"
                 android:hint="Email"
@@ -52,13 +52,13 @@
                 android:singleLine="true"
                 android:textColor="#250F00"
                 android:textColorHint="#250F00"
-                android:textSize="16sp">
-            </EditText>
+                android:textSize="17sp">
+            </com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText>
 
-            <EditText
+            <com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/inputfield"
                 android:ems="10"
@@ -69,8 +69,8 @@
                 android:singleLine="true"
                 android:textColor="#250F00"
                 android:textColorHint="#250F00"
-                android:textSize="16sp">
-            </EditText>
+                android:textSize="17sp">
+            </com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
             </RelativeLayout>
 
 
-            <TextView
+            <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
                 android:id="@+id/txt_forgot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -143,7 +143,7 @@
                     android:orientation="vertical"
                     android:padding="2dp">
 
-                    <TextView
+                    <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
                         android:id="@+id/textView12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -154,7 +154,7 @@
                         android:textColor="#250F00"
                         android:textSize="20sp"/>
 
-                    <TextView
+                    <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"

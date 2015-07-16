@@ -19,11 +19,10 @@ import com.esolz.aicafeapp.R;
 /**
  * Created by ltp on 08/07/15.
  */
-public class FragmentSettings  extends Fragment {
+public class FragmentSettings extends Fragment {
 
     View view;
-    LinearLayout llLoyaltyPoints, llCoupons, llAiCafeFriends;
-    LinearLayout llPipeContainer, slidingNow, llBack;
+    LinearLayout llPipeContainer, slidingNow, llBack, profileDrawer;
     RelativeLayout rlMSGContainer;
     TextView txtPageTitle, txtMSGCounter;
     ImageView imgBack, imgMSG;
@@ -39,10 +38,6 @@ public class FragmentSettings  extends Fragment {
 
         fragmentManager = getFragmentManager();
 
-        llLoyaltyPoints = (LinearLayout) view.findViewById(R.id.ll_loyalty_points);
-        llCoupons = (LinearLayout) view.findViewById(R.id.ll_coupons);
-        llAiCafeFriends = (LinearLayout) view.findViewById(R.id.ll_aicafe_friends);
-
         llPipeContainer = (LinearLayout) getActivity().findViewById(R.id.ll_pipe_container);
         slidingNow = (LinearLayout) getActivity().findViewById(R.id.slidingnow);
         rlMSGContainer = (RelativeLayout) getActivity().findViewById(R.id.rl_msgcontainer);
@@ -53,7 +48,9 @@ public class FragmentSettings  extends Fragment {
         imgMSG = (ImageView) getActivity().findViewById(R.id.img_msg);
 
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        profileDrawer = (LinearLayout) getActivity().findViewById(R.id.profile_drawer);
+        //drawerLayout.closeDrawer(profileDrawer);
 
         llPipeContainer.setVisibility(View.VISIBLE);
         slidingNow.setVisibility(View.VISIBLE);
@@ -61,7 +58,7 @@ public class FragmentSettings  extends Fragment {
         txtPageTitle.setVisibility(View.VISIBLE);
         imgBack.setVisibility(View.GONE);
         llBack.setVisibility(View.GONE);
-        imgMSG.setVisibility(View.VISIBLE);
+        imgMSG.setVisibility(View.GONE);
         txtMSGCounter.setVisibility(View.GONE);
 
         txtPageTitle.setText("Settings");
