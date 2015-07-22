@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mainbg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_bottom">
+
+        <ProgressBar
+            android:id="@+id/pbar_single_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+
+        <ListView
+            android:id="@+id/list_single_chat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"></ListView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/inputfield"
+            android:orientation="horizontal"
+            android:weightSum="6">
+
+            <RelativeLayout
+                android:id="@+id/ll_sticker_chat"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#BDBDBD"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="45dp"
+                    android:layout_height="55dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/aione"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3.7"
+                android:orientation="horizontal">
+
+                <com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText
+                    android:id="@+id/et_chat_send"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#00FFFFFF"
+                    android:gravity="left|top"
+                    android:inputType="textMultiLine"
+                    android:padding="4dp"
+                    android:scrollbars="none"
+                    android:textColor="#250F00"
+                    android:textColorHint="#250F00"
+                    android:textSize="16sp">
+                </com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_send_chat"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.3"
+                android:background="@drawable/send_chat"
+                android:orientation="horizontal"></LinearLayout>
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/hscr_view"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_margin="0dp"
+            android:padding="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:background="#000000"
+                android:orientation="horizontal"
+                android:padding="0dp"
+                android:scrollbars="none">
+
+                <GridView
+                    android:id="@+id/grid"
+                    android:layout_width="360dp"
+                    android:layout_height="match_parent"
+                    android:columnWidth="70dp"
+                    android:horizontalSpacing="8dp"
+                    android:scrollbars="horizontal"
+                    android:verticalSpacing="8dp"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+
+</RelativeLayout>

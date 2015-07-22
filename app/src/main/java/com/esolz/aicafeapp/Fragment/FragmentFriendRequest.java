@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,34 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.esolz.aicafeapp.Adapter.FriendAdapter;
 import com.esolz.aicafeapp.Adapter.FriendRequestAdapter;
+import com.esolz.aicafeapp.Adapter.InboxAdapter;
+import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
+import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
+import com.esolz.aicafeapp.Datatype.FriendListDataType;
+import com.esolz.aicafeapp.Datatype.FriendRequestPendingDataType;
+import com.esolz.aicafeapp.Helper.AppController;
+import com.esolz.aicafeapp.Helper.AppData;
+import com.esolz.aicafeapp.Helper.ConnectionDetector;
 import com.esolz.aicafeapp.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ltp on 08/07/15.
@@ -30,7 +53,8 @@ public class FragmentFriendRequest extends Fragment {
     View view;
     LinearLayout llPipeContainer, slidingNow, llBack, profileDrawer;
     RelativeLayout rlMSGContainer;
-    TextView txtPageTitle, txtMSGCounter;
+    OpenSansSemiboldTextView txtPageTitle;
+    OpenSansRegularTextView txtMSGCounter, txtError;
     ImageView imgBack, imgMSG;
     DrawerLayout drawerLayout;
 
@@ -40,7 +64,10 @@ public class FragmentFriendRequest extends Fragment {
     ListView listFriendRequest;
     ProgressBar pbarFriendRequest;
 
-    ArrayList<HashMap<String, String>> data;
+    ArrayList<FriendRequestPendingDataType> friendRequestPendingDataTypeArrayList;
+    FriendRequestPendingDataType friendRequestPendingDataType;
+
+    ConnectionDetector cd;
 
 
     @Nullable
@@ -48,34 +75,33 @@ public class FragmentFriendRequest extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_friendrequest, container, false);
 
+        cd = new ConnectionDetector(getActivity());
+
         fragmentManager = getFragmentManager();
 
         llPipeContainer = (LinearLayout) getActivity().findViewById(R.id.ll_pipe_container);
         slidingNow = (LinearLayout) getActivity().findViewById(R.id.slidingnow);
         rlMSGContainer = (RelativeLayout) getActivity().findViewById(R.id.rl_msgcontainer);
-        txtPageTitle = (TextView) getActivity().findViewById(R.id.txt_page_title);
+        txtPageTitle = (OpenSansSemiboldTextView) getActivity().findViewById(R.id.txt_page_title);
         imgBack = (ImageView) getActivity().findViewById(R.id.img_back);
         llBack = (LinearLayout) getActivity().findViewById(R.id.ll_back);
-        txtMSGCounter = (TextView) getActivity().findViewById(R.id.txt_msg_counter);
+        txtMSGCounter = (OpenSansRegularTextView) getActivity().findViewById(R.id.txt_msg_counter);
         imgMSG = (ImageView) getActivity().findViewById(R.id.img_msg);
 
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         profileDrawer = (LinearLayout) getActivity().findViewById(R.id.profile_drawer);
-        //drawerLayout.closeDrawer(profileDrawer);
 
-        data = new ArrayList<HashMap<String, String>>();
         listFriendRequest = (ListView) view.findViewById(R.id.list_friendrequest);
+        pbarFriendRequest = (ProgressBar) view.findViewById(R.id.pbar_friendrequest);
+        txtError = (OpenSansRegularTextView) view.findViewById(R.id.txt_error);
+        txtError.setVisibility(View.GONE);
 
-        for (int i = 0; i < 7; i++) {
-            HashMap<String, String> hMap = new HashMap<String, String>();
-            hMap.put("value", "" + i);
-            data.add(hMap);
+        if (cd.isConnectingToInternet()) {
+            makeJsonObjectRequest("http://www.esolz.co.in/lab9/aiCafe/iosapp/friend_request_pending.php", AppData.loginDataType.getId());
+        } else {
+            Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
         }
-
-        FriendRequestAdapter dietAdapter = new FriendRequestAdapter(getActivity(), 0, 0, data);
-        listFriendRequest.setAdapter(dietAdapter);
-
 
         llPipeContainer.setVisibility(View.VISIBLE);
         slidingNow.setVisibility(View.VISIBLE);
@@ -89,5 +115,132 @@ public class FragmentFriendRequest extends Fragment {
         txtPageTitle.setText("Friend Request");
 
         return view;
+    }
+
+    private void makeJsonObjectRequest(final String URL, final String ID) {
+
+        pbarFriendRequest.setVisibility(View.VISIBLE);
+
+        StringRequest sr = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String stringResponse) {
+                        Log.d("Response ", stringResponse);
+                        try {
+                            JSONObject response = new JSONObject(stringResponse);
+                            if (response.getString("auth").equals("success")) {
+                                JSONArray jsonArray = response.getJSONArray("details");
+                                friendRequestPendingDataTypeArrayList = new ArrayList<FriendRequestPendingDataType>();
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    friendRequestPendingDataType = new FriendRequestPendingDataType(
+                                            jsonObject.getString("id"),
+                                            jsonObject.getString("name"),
+                                            jsonObject.getString("sex"),
+                                            jsonObject.getString("email"),
+                                            "",
+                                            jsonObject.getString("about"),
+                                            jsonObject.getString("business"),
+                                            jsonObject.getString("dob"),
+                                            jsonObject.getString("photo"),
+                                            jsonObject.getString("photo_thumb"),
+                                            jsonObject.getString("registerDate"),
+                                            jsonObject.getString("facebookid"),
+                                            jsonObject.getString("last_sync"),
+                                            jsonObject.getString("fb_pic_url"),
+                                            "" + jsonObject.getInt("age")
+                                    );
+                                    friendRequestPendingDataTypeArrayList.add(friendRequestPendingDataType);
+                                    FriendRequestAdapter friendRequestAdapter = new FriendRequestAdapter(getActivity(), 0, 0, friendRequestPendingDataTypeArrayList);
+                                    listFriendRequest.setAdapter(friendRequestAdapter);
+                                }
+                            } else {
+                                txtError.setVisibility(View.VISIBLE);
+                            }
+                        } catch (JSONException e) {
+                            Log.d("JSONException", e.toString());
+                            Toast.makeText(getActivity(), "Server not responding...", Toast.LENGTH_SHORT).show();
+                        }
+                        pbarFriendRequest.setVisibility(View.GONE);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Output : ", "Error: " + error.getMessage());
+                Toast.makeText(getActivity(),
+                        "Server not responding...!", Toast.LENGTH_LONG)
+                        .show();
+                // pBAR.setVisibility(View.GONE);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user_id", ID);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(sr);
+
+//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+//                URL, null, new Response.Listener<JSONObject>() {
+//
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                Log.d("TAG", response.toString());
+//                try {
+//                    if (response.getString("auth").equals("success")) {
+//                        JSONArray jsonArray = response.getJSONArray("details");
+//                        friendRequestPendingDataTypeArrayList = new ArrayList<FriendRequestPendingDataType>();
+//                        for (int i = 0; i < jsonArray.length(); i++) {
+//                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                            friendRequestPendingDataType = new FriendRequestPendingDataType(
+//                                    jsonObject.getString("id"),
+//                                    jsonObject.getString("name"),
+//                                    jsonObject.getString("sex"),
+//                                    jsonObject.getString("email"),
+//                                    "",
+//                                    jsonObject.getString("about"),
+//                                    jsonObject.getString("business"),
+//                                    jsonObject.getString("dob"),
+//                                    jsonObject.getString("photo"),
+//                                    jsonObject.getString("photo_thumb"),
+//                                    jsonObject.getString("registerDate"),
+//                                    jsonObject.getString("facebookid"),
+//                                    jsonObject.getString("last_sync"),
+//                                    jsonObject.getString("fb_pic_url"),
+//                                    "" + jsonObject.getInt("age")
+//                            );
+//                            friendRequestPendingDataTypeArrayList.add(friendRequestPendingDataType);
+//                            FriendRequestAdapter friendRequestAdapter = new FriendRequestAdapter(getActivity(), 0, 0, friendRequestPendingDataTypeArrayList);
+//                            listFriendRequest.setAdapter(friendRequestAdapter);
+//                        }
+//                    } else {
+//                        txtError.setVisibility(View.VISIBLE);
+//                    }
+//                } catch (JSONException e) {
+//                    Log.d("JSONException", e.toString());
+//                    Toast.makeText(getActivity(), "Server not responding...", Toast.LENGTH_SHORT).show();
+//                }
+//                pbarFriendRequest.setVisibility(View.GONE);
+//            }
+//        }, new Response.ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                VolleyLog.d("TAG", "Error: " + error.getMessage());
+//                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 }

@@ -72,7 +72,10 @@ public class FragmentStoreNow extends Fragment {
         llHereNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentAllFriends fragmentAllFriends = new FragmentAllFriends();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentAllFriends);
+                fragmentTransaction.commit();
             }
         });
         llStoreOffer.setOnClickListener(new View.OnClickListener() {
@@ -88,14 +91,13 @@ public class FragmentStoreNow extends Fragment {
             }
         });
 
-
         llPipeContainer.setVisibility(View.VISIBLE);
         slidingNow.setVisibility(View.VISIBLE);
         rlMSGContainer.setVisibility(View.VISIBLE);
         txtPageTitle.setVisibility(View.VISIBLE);
         imgBack.setVisibility(View.GONE);
         llBack.setVisibility(View.GONE);
-        imgMSG.setVisibility(View.VISIBLE);
+        imgMSG.setVisibility(View.GONE);
         txtMSGCounter.setVisibility(View.GONE);
 
         imgMSG.setBackgroundResource(R.drawable.chat);

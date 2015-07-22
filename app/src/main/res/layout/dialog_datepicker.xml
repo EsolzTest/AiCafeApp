@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="480dp"
+    android:layout_height="230dp"
     android:background="#FFFFFF"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
@@ -13,7 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:calendarViewShown="false"></DatePicker>
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"></DatePicker>
 
     <LinearLayout
         android:layout_width="match_parent"

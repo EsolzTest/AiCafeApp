@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/mainbg">
 
     <RelativeLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/mainbg">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -130,136 +131,167 @@
             android:layout_alignParentBottom="true"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/ll_about"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginBottom="1dp"
-                android:background="@drawable/row"
-                android:gravity="center"
+                android:layout_height="210dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/points"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_loyalty_points"
+                <RelativeLayout
+                    android:id="@+id/top"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|left"
-                    android:orientation="vertical">
+                    android:layout_height="35dp"
+                    android:layout_alignParentTop="true"
+                    android:background="#60280D00"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="3dp">
 
                     <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Loyalty Points"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"/>
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="About"
+                        android:textColor="#FFFFFF"
+                        android:textSize="17sp"/>
 
-                    <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
+                    <RelativeLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="You have 2,215 points"
-                        android:textColor="#ffffff"
-                        android:textSize="16sp"/>
-                </LinearLayout>
-            </LinearLayout>
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:orientation="horizontal"
+                        android:padding="4dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginBottom="1dp"
-                android:background="@drawable/row"
-                android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/minus"/>
+                    </RelativeLayout>
+                </RelativeLayout>
 
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/coupons"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_coupons"
+                <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical|left"
-                    android:orientation="vertical">
-
-                    <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Coupons"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"/>
+                    android:layout_below="@+id/top">
 
                     <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
+                        android:id="@+id/txt_profile_about"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="12 new coupons"
-                        android:textColor="#ffffff"
+                        android:layout_margin="10dp"
+                        android:text="TEST"
+                        android:textColor="#FFFFFF"
                         android:textSize="16sp"/>
-                </LinearLayout>
-            </LinearLayout>
+                </ScrollView>
+
+            </RelativeLayout>
+
 
             <LinearLayout
                 android:id="@+id/ll_aicafe_friends"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@drawable/row"
-                android:orientation="horizontal">
+                android:layout_height="70dp"
+                android:background="@drawable/overlaybg1"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                android:weightSum="3">
 
-                <LinearLayout
-                    android:layout_width="85dp"
+                <RelativeLayout
+                    android:id="@+id/rl_chat"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="6dp">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/aifriends"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|left"
-                    android:orientation="vertical">
+                        android:layout_width="33dp"
+                        android:layout_height="28dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/chat1"
+                        android:clickable="false"/>
 
                     <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="AiCafe Friends"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"/>
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:clickable="false"
+                        android:text="Chat"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"/>
 
-                    <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
-                        android:id="@+id/txt_friendcount"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_add_friend"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="6dp">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/addfriend1"
+                        android:clickable="false"/>
+
+                    <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#ffffff"
-                        android:textSize="16sp"/>
-                </LinearLayout>
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:clickable="false"
+                        android:text="Add Friend"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_report"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="6dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="28dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/report1"
+                        android:clickable="false"/>
+
+                    <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:clickable="false"
+                        android:text="Report"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"/>
+
+                </RelativeLayout>
+
             </LinearLayout>
         </LinearLayout>
 
     </RelativeLayout>
 
-</LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/prg_user_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+</RelativeLayout>

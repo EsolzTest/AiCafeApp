@@ -21,10 +21,11 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/img_friend"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/pic"/>
+                android:background="@drawable/placeholder"/>
 
         </RelativeLayout>
 
@@ -39,6 +40,7 @@
             android:paddingTop="10dp">
 
             <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
+                android:id="@+id/txt_friendname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -48,6 +50,7 @@
                 android:textSize="18sp"/>
 
             <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
+                android:id="@+id/txt_friendbusi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -66,12 +69,14 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <Button
+                android:id="@+id/btn_requestaccept"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/accept"/>
 
             <LinearLayout
+                android:id="@+id/btn_requestreject"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
@@ -82,9 +87,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Deni"
+                    android:text="Reject"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"/>
+                    android:textSize="16sp"/>
             </LinearLayout>
 
         </LinearLayout>

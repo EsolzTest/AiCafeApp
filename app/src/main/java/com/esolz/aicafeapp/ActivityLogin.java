@@ -11,11 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText;
 import com.esolz.aicafeapp.Datatype.LoginDataType;
 import com.esolz.aicafeapp.Helper.AppController;
@@ -24,6 +26,9 @@ import com.esolz.aicafeapp.Helper.ConnectionDetector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ltp on 08/07/15.
@@ -54,7 +59,7 @@ public class ActivityLogin extends AppCompatActivity {
         //llFBLogin = (LinearLayout) findViewById(R.id.ll_fblogin);
         pBar = (ProgressBar) findViewById(R.id.pbar);
 
-        etEmail.setText("soutrik@esolzmail.com");
+        etEmail.setText("rahul.roy@esolzmail.com");
         etPassword.setText("123456");
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -64,9 +69,10 @@ public class ActivityLogin extends AppCompatActivity {
                     if (!etEmail.getText().toString().trim().equals("")) {
                         if (isEmailValid(etEmail.getText().toString().trim())) {
                             if (!etPassword.getText().toString().trim().equals("")) {
-                                loginURL = AppData.HOST + "login.php?email=" + etEmail.getText().toString().trim() +
-                                        "&password=" + etPassword.getText().toString().trim();
-                                makeJsonObjectRequest(loginURL);
+//                                loginURL = AppData.HOST + "login.php?email=" + etEmail.getText().toString().trim() +
+//                                        "&password=" + etPassword.getText().toString().trim();
+                                loginURL = AppData.HOST + "login.php";
+                                makeJsonObjectRequest(loginURL, etEmail.getText().toString().trim(), etPassword.getText().toString().trim());
                             } else {
                                 etPassword.requestFocus();
                                 etPassword.setError("Please enter your password.");
@@ -107,62 +113,160 @@ public class ActivityLogin extends AppCompatActivity {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    private void makeJsonObjectRequest(String URL) {
+    private void makeJsonObjectRequest(final String URL, final String email, final String password) {
 
         pBar.setVisibility(View.VISIBLE);
+        btnLogin.setClickable(false);
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                URL, null, new Response.Listener<JSONObject>() {
+        Log.d("Before TAG", email + "  " + password);
+        Log.d("Before TAG", URL);
 
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d("TAG", response.toString());
-                try {
-                    if (response.getString("auth").equals("login success")) {
-                        JSONObject jsonObject = response.getJSONObject("details");
-                        AppData.loginDataType = new LoginDataType(
-                                jsonObject.getString("id"),
-                                jsonObject.getString("name"),
-                                jsonObject.getString("sex"),
-                                jsonObject.getString("email"),
-                                jsonObject.getString("password"),
-                                jsonObject.getString("about"),
-                                jsonObject.getString("business"),
-                                jsonObject.getString("dob"),
-                                jsonObject.getString("photo"),
-                                jsonObject.getString("photo_thumb"),
-                                jsonObject.getString("registerDate"),
-                                jsonObject.getString("facebookid"),
-                                jsonObject.getString("last_sync"),
-                                jsonObject.getString("fb_pic_url"),
-                                jsonObject.getString("age"),
-                                jsonObject.getString("online")
-                        );
+        StringRequest sr = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String stringResponse) {
+                        Log.d("Response ", stringResponse);
+                        try {
+                            JSONObject response = new JSONObject(stringResponse);
+                            if (response.getString("auth").equals("login success")) {
+                                JSONObject jsonObject = response.getJSONObject("details");
+                                AppData.loginDataType = new LoginDataType(
+                                        jsonObject.getString("id"),
+                                        jsonObject.getString("name"),
+                                        jsonObject.getString("sex"),
+                                        jsonObject.getString("email"),
+                                        jsonObject.getString("password"),
+                                        jsonObject.getString("about"),
+                                        jsonObject.getString("business"),
+                                        jsonObject.getString("dob"),
+                                        jsonObject.getString("photo"),
+                                        jsonObject.getString("photo_thumb"),
+                                        jsonObject.getString("registerDate"),
+                                        jsonObject.getString("facebookid"),
+                                        jsonObject.getString("last_sync"),
+                                        jsonObject.getString("fb_pic_url"),
+                                        "" + jsonObject.getInt("age"),
+                                        jsonObject.getString("online")
+                                );
 
-                        Toast.makeText(getApplicationContext(), response.getString("auth"), Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(ActivityLogin.this, ActivityLandingPage.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(getApplicationContext(), response.getString("auth"), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), response.getString("auth"), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(ActivityLogin.this, ActivityLandingPage.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), response.getString("auth"), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Log.d("JSONException", e.toString());
+                            Toast.makeText(getApplicationContext(), "Server not responding...", Toast.LENGTH_SHORT).show();
+                        }
+                        pBar.setVisibility(View.GONE);
+                        btnLogin.setClickable(true);
                     }
-                } catch (JSONException e) {
-                    Log.d("JSONException", e.toString());
-                    Toast.makeText(getApplicationContext(), "Server not responding...", Toast.LENGTH_SHORT).show();
-                }
-                pBar.setVisibility(View.GONE);
-            }
-        }, new Response.ErrorListener() {
-
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("TAG", "Error: " + error.getMessage());
+                VolleyLog.d("Output : ", "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                        "Server not responding...!", Toast.LENGTH_LONG)
+                        .show();
+                // pBAR.setVisibility(View.GONE);
             }
-        });
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("email", email);
+                params.put("password", password);
 
-        AppController.getInstance().addToRequestQueue(jsonObjReq);
+                Log.d("After TAG", email + "  " + password);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(sr);
+
+//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+//                URL, null, new Response.Listener<JSONObject>() {
+//
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                Log.d("TAG", response.toString());
+//                Log.d("TAG", URL);
+////                try {
+////                    if (response.getString("auth").equals("login success")) {
+////                        JSONObject jsonObject = response.getJSONObject("details");
+////                        AppData.loginDataType = new LoginDataType(
+////                                jsonObject.getString("id"),
+////                                jsonObject.getString("name"),
+////                                jsonObject.getString("sex"),
+////                                jsonObject.getString("email"),
+////                                jsonObject.getString("password"),
+////                                jsonObject.getString("about"),
+////                                jsonObject.getString("business"),
+////                                jsonObject.getString("dob"),
+////                                jsonObject.getString("photo"),
+////                                jsonObject.getString("photo_thumb"),
+////                                jsonObject.getString("registerDate"),
+////                                jsonObject.getString("facebookid"),
+////                                jsonObject.getString("last_sync"),
+////                                jsonObject.getString("fb_pic_url"),
+////                                "" + jsonObject.getInt("age"),
+////                                jsonObject.getString("online")
+////                        );
+////
+////                        Toast.makeText(getApplicationContext(), response.getString("auth"), Toast.LENGTH_SHORT).show();
+////                        Intent intent = new Intent(ActivityLogin.this, ActivityLandingPage.class);
+////                        startActivity(intent);
+////                        finish();
+////                    } else {
+////                        Toast.makeText(getApplicationContext(), response.getString("auth"), Toast.LENGTH_SHORT).show();
+////                    }
+////                } catch (JSONException e) {
+////                    Log.d("JSONException", e.toString());
+////                    Toast.makeText(getApplicationContext(), "Server not responding...", Toast.LENGTH_SHORT).show();
+////                }
+////                pBar.setVisibility(View.GONE);
+////                btnLogin.setClickable(true);
+//            }
+//        }, new Response.ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                VolleyLog.d("TAG", "Error: " + error.getMessage());
+//                Toast.makeText(getApplicationContext(),
+//                        error.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        }) {
+//
+//            @Override
+//            protected Map<String, String> getParams() {
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("email", email);
+//                params.put("password", password);
+//
+//                Log.d("TAG", email + "  " + password);
+//
+//                return params;
+//            }
+//
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("Content-Type", "application/x-www-form-urlencoded");
+//                return params;
+//            }
+//
+//        };
+//
+//        AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
 }

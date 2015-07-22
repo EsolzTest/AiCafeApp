@@ -33,8 +33,8 @@
             android:padding="4dp">
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/minus"/>
         </RelativeLayout>
@@ -54,6 +54,15 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"/>
+
+    <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
+        android:id="@+id/txt_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No data found"
+        android:textColor="#280D00"
+        android:textSize="18sp"/>
 
 
 </RelativeLayout>

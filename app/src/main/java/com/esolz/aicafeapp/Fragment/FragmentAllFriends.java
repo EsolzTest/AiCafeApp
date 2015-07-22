@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -27,9 +26,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.esolz.aicafeapp.Adapter.FriendAdapter;
 import com.esolz.aicafeapp.Adapter.InboxAdapter;
+import com.esolz.aicafeapp.Adapter.UserListIngAdapter;
 import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
 import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
 import com.esolz.aicafeapp.Datatype.FriendListDataType;
+import com.esolz.aicafeapp.Datatype.UserListingDataType;
 import com.esolz.aicafeapp.Helper.AppController;
 import com.esolz.aicafeapp.Helper.AppData;
 import com.esolz.aicafeapp.Helper.ConnectionDetector;
@@ -44,9 +45,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by ltp on 08/07/15.
+ * Created by ltp on 20/07/15.
  */
-public class FragmentAiCafeFriends extends Fragment {
+public class FragmentAllFriends extends Fragment {
 
     View view;
     LinearLayout llPipeContainer, slidingNow, llBack;
@@ -59,18 +60,18 @@ public class FragmentAiCafeFriends extends Fragment {
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
-    ListView listFriend;
-    ProgressBar pbarFriend;
+    ListView listInbox;
+    ProgressBar pbarInbox;
 
-    ArrayList<FriendListDataType> friendListDataTypeArrayList;
-    FriendListDataType friendListDataType;
+    ArrayList<UserListingDataType> userListingDataTypeArrayList;
+    UserListingDataType userListingDataType;
 
     ConnectionDetector cd;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_aicafefriends, container, false);
+        view = inflater.inflate(R.layout.frag_inbox, container, false);
 
         cd = new ConnectionDetector(getActivity());
 
@@ -88,13 +89,13 @@ public class FragmentAiCafeFriends extends Fragment {
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        listFriend = (ListView) view.findViewById(R.id.list_friend);
-        pbarFriend = (ProgressBar) view.findViewById(R.id.pbar_friend);
+        listInbox = (ListView) view.findViewById(R.id.list_inbox);
+        pbarInbox = (ProgressBar) view.findViewById(R.id.pbar_inbox);
         txtError = (OpenSansRegularTextView) view.findViewById(R.id.txt_error);
         txtError.setVisibility(View.GONE);
 
         if (cd.isConnectingToInternet()) {
-            makeJsonObjectRequest("http://www.esolz.co.in/lab9/aiCafe/iosapp/friend_list.php", AppData.loginDataType.getId());
+            makeJsonObjectRequest("http://203.196.159.37/lab9/aiCafe/iosapp/user_listing.php", AppData.loginDataType.getId());
         } else {
             Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
         }
@@ -108,14 +109,14 @@ public class FragmentAiCafeFriends extends Fragment {
         imgMSG.setVisibility(View.GONE);
         txtMSGCounter.setVisibility(View.GONE);
 
-        txtPageTitle.setText("AiCafe Friends");
+        txtPageTitle.setText("All Users");
 
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentProfile fragmentProfile = new FragmentProfile();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
+                FragmentStoreNow fragmentStoreNow = new FragmentStoreNow();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentStoreNow);
                 fragmentTransaction.commit();
             }
         });
@@ -125,7 +126,8 @@ public class FragmentAiCafeFriends extends Fragment {
 
     private void makeJsonObjectRequest(final String URL, final String ID) {
 
-        pbarFriend.setVisibility(View.VISIBLE);
+        pbarInbox.setVisibility(View.VISIBLE);
+
         StringRequest sr = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -133,42 +135,37 @@ public class FragmentAiCafeFriends extends Fragment {
                         Log.d("Response ", stringResponse);
                         try {
                             JSONObject response = new JSONObject(stringResponse);
-                            if (response.getString("auth").equals("success")) {
-                                JSONArray jsonArray = response.getJSONArray("details");
-                                friendListDataTypeArrayList = new ArrayList<FriendListDataType>();
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    friendListDataType = new FriendListDataType(
-                                            jsonObject.getString("id"),
-                                            jsonObject.getString("name"),
-                                            jsonObject.getString("sex"),
-                                            jsonObject.getString("email"),
-                                            "",
-                                            jsonObject.getString("about"),
-                                            jsonObject.getString("business"),
-                                            jsonObject.getString("dob"),
-                                            jsonObject.getString("photo"),
-                                            jsonObject.getString("photo_thumb"),
-                                            jsonObject.getString("registerDate"),
-                                            jsonObject.getString("facebookid"),
-                                            jsonObject.getString("last_sync"),
-                                            jsonObject.getString("fb_pic_url"),
-                                            "" + jsonObject.getInt("age"),
-                                            jsonObject.getString("online"),
-                                            jsonObject.getString("last_chat")
-                                    );
-                                    friendListDataTypeArrayList.add(friendListDataType);
-                                    FriendAdapter friendAdapter = new FriendAdapter(getActivity(), 0, 0, friendListDataTypeArrayList);
-                                    listFriend.setAdapter(friendAdapter);
-                                }
-                            } else {
-                                txtError.setVisibility(View.VISIBLE);
+                            JSONArray jsonArray = response.getJSONArray("details");
+                            userListingDataTypeArrayList = new ArrayList<UserListingDataType>();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                userListingDataType = new UserListingDataType(
+                                        jsonObject.getString("id"),
+                                        jsonObject.getString("name"),
+                                        jsonObject.getString("sex"),
+                                        jsonObject.getString("email"),
+                                        "",
+                                        jsonObject.getString("about"),
+                                        jsonObject.getString("business"),
+                                        jsonObject.getString("dob"),
+                                        jsonObject.getString("photo"),
+                                        jsonObject.getString("photo_thumb"),
+                                        jsonObject.getString("registerDate"),
+                                        jsonObject.getString("facebookid"),
+                                        jsonObject.getString("last_sync"),
+                                        jsonObject.getString("fb_pic_url"),
+                                        "" + jsonObject.getInt("age"),
+                                        jsonObject.getString("friend")
+                                );
+                                userListingDataTypeArrayList.add(userListingDataType);
                             }
+                            UserListIngAdapter userListIngAdapter = new UserListIngAdapter(getActivity(), 0, 0, userListingDataTypeArrayList);
+                            listInbox.setAdapter(userListIngAdapter);
                         } catch (JSONException e) {
                             Log.d("JSONException", e.toString());
                             Toast.makeText(getActivity(), "Server not responding...", Toast.LENGTH_SHORT).show();
                         }
-                        pbarFriend.setVisibility(View.GONE);
+                        pbarInbox.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -204,42 +201,37 @@ public class FragmentAiCafeFriends extends Fragment {
 //            public void onResponse(JSONObject response) {
 //                Log.d("TAG", response.toString());
 //                try {
-//                    if (response.getString("auth").equals("success")) {
-//                        JSONArray jsonArray = response.getJSONArray("details");
-//                        friendListDataTypeArrayList = new ArrayList<FriendListDataType>();
-//                        for (int i = 0; i < jsonArray.length(); i++) {
-//                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                            friendListDataType = new FriendListDataType(
-//                                    jsonObject.getString("id"),
-//                                    jsonObject.getString("name"),
-//                                    jsonObject.getString("sex"),
-//                                    jsonObject.getString("email"),
-//                                    "",
-//                                    jsonObject.getString("about"),
-//                                    jsonObject.getString("business"),
-//                                    jsonObject.getString("dob"),
-//                                    jsonObject.getString("photo"),
-//                                    jsonObject.getString("photo_thumb"),
-//                                    jsonObject.getString("registerDate"),
-//                                    jsonObject.getString("facebookid"),
-//                                    jsonObject.getString("last_sync"),
-//                                    jsonObject.getString("fb_pic_url"),
-//                                    "" + jsonObject.getInt("age"),
-//                                    jsonObject.getString("online"),
-//                                    jsonObject.getString("last_chat")
-//                            );
-//                            friendListDataTypeArrayList.add(friendListDataType);
-//                            FriendAdapter friendAdapter = new FriendAdapter(getActivity(), 0, 0, friendListDataTypeArrayList);
-//                            listFriend.setAdapter(friendAdapter);
-//                        }
-//                    } else {
-//                        txtError.setVisibility(View.VISIBLE);
+//                    JSONArray jsonArray = response.getJSONArray("details");
+//                    userListingDataTypeArrayList = new ArrayList<UserListingDataType>();
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                        userListingDataType = new UserListingDataType(
+//                                jsonObject.getString("id"),
+//                                jsonObject.getString("name"),
+//                                jsonObject.getString("sex"),
+//                                jsonObject.getString("email"),
+//                                "",
+//                                jsonObject.getString("about"),
+//                                jsonObject.getString("business"),
+//                                jsonObject.getString("dob"),
+//                                jsonObject.getString("photo"),
+//                                jsonObject.getString("photo_thumb"),
+//                                jsonObject.getString("registerDate"),
+//                                jsonObject.getString("facebookid"),
+//                                jsonObject.getString("last_sync"),
+//                                jsonObject.getString("fb_pic_url"),
+//                                "" + jsonObject.getInt("age"),
+//                                jsonObject.getString("friend")
+//                        );
+//                        userListingDataTypeArrayList.add(userListingDataType);
+//                        UserListIngAdapter userListIngAdapter = new UserListIngAdapter(getActivity(), 0, 0, userListingDataTypeArrayList);
+//                        listInbox.setAdapter(userListIngAdapter);
 //                    }
 //                } catch (JSONException e) {
 //                    Log.d("JSONException", e.toString());
 //                    Toast.makeText(getActivity(), "Server not responding...", Toast.LENGTH_SHORT).show();
 //                }
-//                pbarFriend.setVisibility(View.GONE);
+//                pbarInbox.setVisibility(View.GONE);
 //            }
 //        }, new Response.ErrorListener() {
 //
@@ -253,4 +245,6 @@ public class FragmentAiCafeFriends extends Fragment {
 //        AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 }
+
+
 

@@ -48,7 +48,7 @@ public class FragmentLoyaltyPoints extends Fragment {
         imgMSG = (ImageView) getActivity().findViewById(R.id.img_msg);
 
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
         llPipeContainer.setVisibility(View.GONE);
