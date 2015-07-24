@@ -229,26 +229,26 @@ public class FragmentUserInformation extends Fragment {
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getArguments().getString("Page").equals("FragmentInbox")) {
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    FragmentInbox fragmentInbox = new FragmentInbox();
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentInbox);
-                    fragmentTransaction.commit();
-                } else if (getArguments().getString("Page").equals("FragmentAiCafeFriends")) {
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    FragmentAiCafeFriends fragmentAiCafeFriends = new FragmentAiCafeFriends();
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentAiCafeFriends);
-                    fragmentTransaction.commit();
-                } else {
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    FragmentAllFriends fragmentAllFriends = new FragmentAllFriends();
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentAllFriends);
-                    fragmentTransaction.commit();
-                }
-//                fragmentTransaction = fragmentManager.beginTransaction();
-//                FragmentProfile fragmentProfile = new FragmentProfile();
-//                fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
-//                fragmentTransaction.commit();
+//                if (getArguments().getString("Page").equals("FragmentInbox")) {
+//                    fragmentTransaction = fragmentManager.beginTransaction();
+//                    FragmentInbox fragmentInbox = new FragmentInbox();
+//                    fragmentTransaction.replace(R.id.fragment_container, fragmentInbox);
+//                    fragmentTransaction.commit();
+//                } else if (getArguments().getString("Page").equals("FragmentAiCafeFriends")) {
+//                    fragmentTransaction = fragmentManager.beginTransaction();
+//                    FragmentAiCafeFriends fragmentAiCafeFriends = new FragmentAiCafeFriends();
+//                    fragmentTransaction.replace(R.id.fragment_container, fragmentAiCafeFriends);
+//                    fragmentTransaction.commit();
+//                } else {
+//                    fragmentTransaction = fragmentManager.beginTransaction();
+//                    FragmentAllFriends fragmentAllFriends = new FragmentAllFriends();
+//                    fragmentTransaction.replace(R.id.fragment_container, fragmentAllFriends);
+//                    fragmentTransaction.commit();
+//                }
+                fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentProfile fragmentProfile = new FragmentProfile();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
+                fragmentTransaction.commit();
             }
         });
 

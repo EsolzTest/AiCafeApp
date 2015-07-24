@@ -170,6 +170,8 @@ public class ActivityLogin extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         "Server not responding...!", Toast.LENGTH_LONG)
                         .show();
+
+                btnLogin.setClickable(true);
                 // pBAR.setVisibility(View.GONE);
             }
         }) {

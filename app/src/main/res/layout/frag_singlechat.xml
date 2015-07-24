@@ -16,11 +16,22 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"/>
 
+        <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
+            android:id="@+id/txt_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="No data found"
+            android:textColor="#250F00"
+            android:textSize="18sp"/>
+
         <ListView
             android:id="@+id/list_single_chat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"></ListView>
+            android:scrollbars="none"
+            android:stackFromBottom="true"
+            android:transcriptMode="normal"></ListView>
     </RelativeLayout>
 
     <LinearLayout
