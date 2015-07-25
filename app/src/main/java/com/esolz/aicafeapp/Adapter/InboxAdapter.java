@@ -11,12 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
 import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
 import com.esolz.aicafeapp.Datatype.FriendListDataType;
+import com.esolz.aicafeapp.Fragment.FragmentSingleChat;
 import com.esolz.aicafeapp.Fragment.FragmentUserInformation;
 import com.esolz.aicafeapp.Helper.AppData;
 import com.esolz.aicafeapp.Helper.CircleTransform;
@@ -64,6 +66,8 @@ public class InboxAdapter extends ArrayAdapter<FriendListDataType> {
             holder.txtFriendName = (OpenSansSemiboldTextView) convertView.findViewById(R.id.txt_friendname);
             holder.txtLastChat = (OpenSansRegularTextView) convertView.findViewById(R.id.txt_lastchat);
 
+            holder.btnChat = (LinearLayout) convertView.findViewById(R.id.btn_inbox_chat);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -98,6 +102,22 @@ public class InboxAdapter extends ArrayAdapter<FriendListDataType> {
             }
         });
 
+        holder.btnChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("USER_ID", friendListDataTypeArrayList.get(position).getId());
+                bundle.putString("Page", "FragmentInbox");
+                bundle.putString("FriendImg", friendListDataTypeArrayList.get(position).getPhoto_thumb());
+
+                fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentSingleChat fragmentSingleChat = new FragmentSingleChat();
+                fragmentSingleChat.setArguments(bundle);
+                fragmentTransaction.replace(R.id.fragment_container, fragmentSingleChat);
+                fragmentTransaction.commit();
+            }
+        });
+
         return convertView;
     }
 
@@ -106,6 +126,7 @@ public class InboxAdapter extends ArrayAdapter<FriendListDataType> {
         OpenSansSemiboldTextView txtFriendName;
         OpenSansRegularTextView txtLastChat;
         RelativeLayout mainContainer;
+        LinearLayout btnChat;
     }
 
 }

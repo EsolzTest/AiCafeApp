@@ -93,6 +93,8 @@ public class FragmentUserInformation extends Fragment {
     RelativeLayout rlReportSend;
     ImageView imgCancel;
 
+    String imgSender = "";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -190,6 +192,7 @@ public class FragmentUserInformation extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("USER_ID", getArguments().getString("USER_ID"));
                 bundle.putString("Page", "FragmentUserInformation");
+                bundle.putString("FriendImg", imgSender);
 
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentSingleChat fragmentSingleChat = new FragmentSingleChat();
@@ -472,6 +475,7 @@ public class FragmentUserInformation extends Fragment {
                             txtStatus.setText(jsonObject.getString("business"));
                             txtProfileAbout.setText(jsonObject.getString("about"));
 
+                            imgSender = jsonObject.getString("photo_thumb");
 
                             prgUserInformation.setVisibility(View.GONE);
                             mainLayout.setVisibility(View.VISIBLE);

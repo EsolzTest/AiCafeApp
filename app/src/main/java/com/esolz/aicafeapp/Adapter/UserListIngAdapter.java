@@ -29,6 +29,7 @@ import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
 import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
 import com.esolz.aicafeapp.Datatype.FriendRequestPendingDataType;
 import com.esolz.aicafeapp.Datatype.UserListingDataType;
+import com.esolz.aicafeapp.Fragment.FragmentSingleChat;
 import com.esolz.aicafeapp.Fragment.FragmentUserInformation;
 import com.esolz.aicafeapp.Helper.AppController;
 import com.esolz.aicafeapp.Helper.AppData;
@@ -119,7 +120,15 @@ public class UserListIngAdapter extends ArrayAdapter<UserListingDataType> {
         holder.btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, userListingDataTypeArrayList.get(position).getId(), Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putString("USER_ID", userListingDataTypeArrayList.get(position).getId());
+                bundle.putString("Page", "FragmentAllFriend");
+
+                fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentSingleChat fragmentSingleChat = new FragmentSingleChat();
+                fragmentSingleChat.setArguments(bundle);
+                fragmentTransaction.replace(R.id.fragment_container, fragmentSingleChat);
+                fragmentTransaction.commit();
             }
         });
         holder.btnAddFriend.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +151,7 @@ public class UserListIngAdapter extends ArrayAdapter<UserListingDataType> {
                 Bundle bundle = new Bundle();
                 bundle.putString("USER_ID", userListingDataTypeArrayList.get(position).getId());
                 bundle.putString("Page", "FragmentAllFriend");
+                bundle.putString("FriendImg", userListingDataTypeArrayList.get(position).getPhoto_thumb());
 
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentUserInformation fragmentUserInformation = new FragmentUserInformation();

@@ -189,6 +189,8 @@ public class FragmentInbox extends Fragment {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("id", ID);
+                params.put("start", "0");
+                params.put("records", "50");
                 return params;
             }
 

@@ -2,11 +2,16 @@ package com.esolz.aicafeapp;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,7 +21,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -24,11 +28,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
 import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
-import com.esolz.aicafeapp.Datatype.LoginDataType;
 import com.esolz.aicafeapp.Fragment.FragmentAbout;
 import com.esolz.aicafeapp.Fragment.FragmentAddCoupon;
 import com.esolz.aicafeapp.Fragment.FragmentChatRoom;
@@ -39,6 +41,7 @@ import com.esolz.aicafeapp.Fragment.FragmentStoreMap;
 import com.esolz.aicafeapp.Fragment.FragmentStoreNow;
 import com.esolz.aicafeapp.Helper.AppController;
 import com.esolz.aicafeapp.Helper.AppData;
+import com.esolz.aicafeapp.gcmnotification.GCMIntentService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,13 +68,16 @@ public class ActivityLandingPage extends AppCompatActivity {
     FragmentTransaction fragmentTransaction;
 
     ProgressDialog progressDialog;
+    SharedPreferences sharedPreferences;
+
+    MyReceiver myReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_landingpage);
-
+        sharedPreferences = getSharedPreferences("AppCredit", Context.MODE_PRIVATE);
         fragmentManager = getSupportFragmentManager();
 
         llPipeContainer = (LinearLayout) findViewById(R.id.ll_pipe_container);
@@ -103,10 +109,33 @@ public class ActivityLandingPage extends AppCompatActivity {
             }
         });
 
+        Intent intentMyIntentService = new Intent(this, GCMIntentService.class);
+        intentMyIntentService.putExtra(GCMIntentService.MY_EVENT_ACTION, "AiCafe");
+        startService(intentMyIntentService);
+
+        myReceiver = new MyReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(GCMIntentService.MY_EVENT_ACTION);
+        registerReceiver(myReceiver, intentFilter);
+
+
+//        try {
+////        if(getIntent().getExtras().getString("")) {
+//            Bundle bundle = new Bundle();
+//            bundle.putString("USER_ID", getIntent().getExtras().getString("send_to"));
+//            bundle.putString("Page", "FragmentProfile");
+//
+//            fragmentTransaction = fragmentManager.beginTransaction();
+//            FragmentSingleChat fragmentSingleChat = new FragmentSingleChat();
+//            fragmentSingleChat.setArguments(bundle);
+//            fragmentTransaction.replace(R.id.fragment_container, fragmentSingleChat);
+//            fragmentTransaction.commit();
+//        } catch (Exception e) {
         fragmentTransaction = fragmentManager.beginTransaction();
         FragmentProfile fragmentProfile = new FragmentProfile();
         fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
         fragmentTransaction.commit();
+        //}
 
         llProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -461,6 +490,8 @@ public class ActivityLandingPage extends AppCompatActivity {
                         try {
                             JSONObject response = new JSONObject(stringResponse);
                             if (response.getString("auth").equals("logout success")) {
+//                                Intent intent = new Intent(ActivityLandingPage.this, ActivityLogin.class);
+//                                startActivity(intent);
                                 finish();
                             } else {
                                 Toast.makeText(getApplicationContext(), response.getString("auth"), Toast.LENGTH_SHORT).show();
@@ -469,7 +500,9 @@ public class ActivityLandingPage extends AppCompatActivity {
                             Log.d("JSONException", e.toString());
                             Toast.makeText(getApplicationContext(), "Server not responding...", Toast.LENGTH_SHORT).show();
                         }
-                        //progressDialog.dismiss();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.clear();
+                        editor.commit();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -497,40 +530,67 @@ public class ActivityLandingPage extends AppCompatActivity {
         };
 
         AppController.getInstance().addToRequestQueue(sr);
+    }
 
-//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-//                URL, null, new Response.Listener<JSONObject>() {
-//
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                Log.d("TAG", response.toString());
-//                progressDialog.dismiss();
-//                try {
-//                    if (response.getString("auth").equals("logout success")) {
-//                        finish();
-//                    } else {
-//                        Toast.makeText(getApplicationContext(), response.getString("auth"), Toast.LENGTH_SHORT).show();
-//                    }
-//                } catch (JSONException e) {
-//                    Log.d("JSONException", e.toString());
-//                    Toast.makeText(getApplicationContext(), "Server not responding...", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                VolleyLog.d("TAG", "Error: " + error.getMessage());
-//                Toast.makeText(getApplicationContext(),
-//                        error.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        AppController.getInstance().addToRequestQueue(jsonObjReq);
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppController.setIsAppRunning("NO");
+        Toast.makeText(getApplicationContext(), "Destroy" + AppController.isAppRunning(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(myReceiver);
+        super.onStop();
     }
 
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
+    }
+
+    private class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            // TODO Auto-generated method stub
+
+            Toast.makeText(getApplicationContext(), "test receiver", Toast.LENGTH_SHORT).show();
+
+//            String datapassed = arg1.getStringExtra("DATAPASSED");
+//            if (datapassed.equals("done")) {
+//                // ***********************************Fragment
+//                fragmentManager = getSupportFragmentManager();
+//                fragmentTransaction = fragmentManager.beginTransaction();
+//                LandingPageFeedListing diet_fragment = new LandingPageFeedListing();
+//                fragmentTransaction.replace(R.id.frglandingbucket,
+//                        diet_fragment);
+//                fragmentTransaction.commit();
+//                // ***********************************
+//            }
+
+            Log.d("chat_id =====", intent.getStringExtra("chat_id"));
+            Log.d("send_from =====", intent.getStringExtra("send_from"));
+            Log.d("send_to =====", intent.getStringExtra("send_to"));
+            Log.d("message =====", intent.getStringExtra("message"));
+            Log.d("type =====", intent.getStringExtra("type"));
+            Log.d("stickername =====", intent.getStringExtra("stickername"));
+            Log.d("chat_time =====", intent.getStringExtra("chat_time"));
+            Log.d("chat_date =====", intent.getStringExtra("chat_date"));
+            Log.d("status =====", intent.getStringExtra("status"));
+            Log.d("file_link =====", intent.getStringExtra("file_link"));
+            Log.d("file_available =====", intent.getStringExtra("file_available"));
+            Log.d("name =====", intent.getStringExtra("name"));
+            Log.d("photo =====", intent.getStringExtra("photo"));
+            Log.d("photo_thumb =====", intent.getStringExtra("photo_thumb"));
+
+        }
+
     }
 }

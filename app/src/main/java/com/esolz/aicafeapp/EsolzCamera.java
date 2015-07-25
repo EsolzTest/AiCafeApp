@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
+import com.esolz.aicafeapp.Helper.AppController;
 import com.esolz.aicafeapp.camerapreviewesolz.CameraPreview;
 
 public class EsolzCamera extends AppCompatActivity {
@@ -65,5 +66,17 @@ public class EsolzCamera extends AppCompatActivity {
         mLayout.removeView(mPreview); // This is necessary.
         mPreview = null;
     }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        AppController.setIsAppRunning("YES");
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        AppController.setIsAppRunning("NO");
+//    }
 
 }

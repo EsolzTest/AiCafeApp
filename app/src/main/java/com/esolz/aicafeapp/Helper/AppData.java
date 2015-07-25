@@ -14,4 +14,8 @@ public class AppData {
     public static LoginDataType loginDataType;
 
     public static List<Integer> stikersHolder;
+
+    public static String appRegId = "";
+
+    public static boolean isChatAlive = false;
 }

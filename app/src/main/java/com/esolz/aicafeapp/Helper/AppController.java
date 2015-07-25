@@ -1,6 +1,8 @@
 package com.esolz.aicafeapp.Helper;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -18,10 +20,27 @@ public class AppController extends Application {
 
     private static AppController mInstance;
 
+    public  static SharedPreferences preferCheckAppState;
+    public  static SharedPreferences sateAppState;
+    public  static SharedPreferences.Editor edit;
+    public String isAppRunning;
+
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+
+        preferCheckAppState = getSharedPreferences("CHECK_APP_STATE", Context.MODE_PRIVATE);
+    }
+
+    public static String isAppRunning() {
+        return preferCheckAppState.getString("AppState", "");
+    }
+
+    public static void setIsAppRunning(String isAppRunning) {
+        edit = preferCheckAppState.edit();
+        edit.putString("AppState", isAppRunning);
+        edit.commit();
     }
 
     public static synchronized AppController getInstance() {

@@ -3,6 +3,7 @@ package com.esolz.aicafeapp.Adapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,11 +47,13 @@ public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
     ViewHolder holder;
     Context context;
     LayoutInflater inflator;
-    ArrayList<ChatViewDataType> chatViewDataTypeArrayList, chatViewDataTypeArrayListLazy;
+    ArrayList<ChatViewDataType> chatViewDataTypeArrayList, chatViewDataTypeArrayListLazy, chatViewDataTypeArrayListNoti;
     ChatViewDataType chatViewDataType;
     ConnectionDetector cd;
     int totalResponseValue;
     String idRec;
+
+    int lazyCount = 0;
 
     public SingleChatAdapter(Context context, int resource, int textViewResourceId,
                              ArrayList<ChatViewDataType> chatViewDataTypeArrayList,
@@ -142,7 +145,7 @@ public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
 
                 holder.txtReceiverName.setText(chatViewDataTypeArrayList.get(position).getName());
                 holder.txtReceiverTime.setText(chatViewDataTypeArrayList.get(position).getChat_date());
-                holder.txtReceiver.setText(chatViewDataTypeArrayList.get(position).getMessage());
+                holder.txtReceiver.setText(/*Html.fromHtml(*/chatViewDataTypeArrayList.get(position).getMessage()/*)*/);
 
                 Picasso.with(context).load("http://www.esolz.co.in/lab9/aiCafe/" + AppData.loginDataType.getPhoto_thumb())
                         .transform(new CircleTransform()).into(holder.imgReceiver);
@@ -160,25 +163,27 @@ public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
                         centerCrop().fit().into(holder.imgStickerSend);
 
                 Picasso.with(context).load("http://www.esolz.co.in/lab9/aiCafe/" + chatViewDataTypeArrayList.get(position).getPhoto_thumb())
-                        .transform(new CircleTransform()).into(holder.imgStickerReceive);
-                Picasso.with(context).load("http://www.esolz.co.in/lab9/aiCafe/" + AppData.loginDataType.getPhoto_thumb())
                         .transform(new CircleTransform()).into(holder.imgSenderSticker);
+                Picasso.with(context).load("http://www.esolz.co.in/lab9/aiCafe/" + AppData.loginDataType.getPhoto_thumb())
+                        .transform(new CircleTransform()).into(holder.imgStickerReceive);
             } else {
                 holder.rlReceiverMsg.setVisibility(View.GONE);
                 holder.rlSenderMsg.setVisibility(View.VISIBLE);
 
                 holder.txtSenderName.setText(chatViewDataTypeArrayList.get(position).getName());
                 holder.txtSendTime.setText(chatViewDataTypeArrayList.get(position).getChat_date());
-                holder.txtSend.setText(chatViewDataTypeArrayList.get(position).getMessage());
+                holder.txtSend.setText(/*Html.fromHtml(*/chatViewDataTypeArrayList.get(position).getMessage()/*)*/);
 
                 Picasso.with(context).load("http://www.esolz.co.in/lab9/aiCafe/" + chatViewDataTypeArrayList.get(position).getPhoto_thumb())
-                        .transform(new CircleTransform()).into(holder.imgReceiver);
-                Picasso.with(context).load("http://www.esolz.co.in/lab9/aiCafe/" + AppData.loginDataType.getPhoto_thumb())
                         .transform(new CircleTransform()).into(holder.imgSender);
+                Picasso.with(context).load("http://www.esolz.co.in/lab9/aiCafe/" + AppData.loginDataType.getPhoto_thumb())
+                        .transform(new CircleTransform()).into(holder.imgReceiver);
             }
         }
 
-//        if (position == 0) {
+        if (position == 0) {
+
+            lazyCount = (lazyCount + 1);
 //            Toast.makeText(context, position + "   Size :  " + chatViewDataTypeArrayList.size(), Toast.LENGTH_SHORT).show();
 //            if (chatViewDataTypeArrayList.size() < totalResponseValue) {
 //                if (cd.isConnectingToInternet()) {
@@ -191,7 +196,7 @@ public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
 //                    Toast.makeText(context, "No internet connection.", Toast.LENGTH_SHORT).show();
 //                }
 //            }
-//        }
+        }
 
         return convertView;
     }
@@ -237,7 +242,7 @@ public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
                                         );
                                         chatViewDataTypeArrayListLazy.add(chatViewDataType);
                                     }
-                                    //Collections.reverse(chatViewDataTypeArrayListLazy);
+                                    Collections.reverse(chatViewDataTypeArrayListLazy);
                                     chatViewDataTypeArrayList.addAll(0, chatViewDataTypeArrayListLazy);
                                     //Collections.reverse(chatViewDataTypeArrayList);
                                     notifyDataSetChanged();

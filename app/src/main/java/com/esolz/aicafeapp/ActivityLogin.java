@@ -1,12 +1,13 @@
 package com.esolz.aicafeapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -16,7 +17,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText;
 import com.esolz.aicafeapp.Datatype.LoginDataType;
@@ -44,6 +44,8 @@ public class ActivityLogin extends AppCompatActivity {
 
     String exception = "", loginURL = "";
 
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +53,10 @@ public class ActivityLogin extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         cd = new ConnectionDetector(ActivityLogin.this);
+
+        sharedPreferences = getSharedPreferences("AppCredit", Context.MODE_PRIVATE);
+
+        Log.v("LoginActivity MY", "Registration ID: " + AppData.appRegId);
 
         etEmail = (OpenSansSemiboldEditText) findViewById(R.id.et_email);
         etPassword = (OpenSansSemiboldEditText) findViewById(R.id.et_password);
@@ -113,6 +119,18 @@ public class ActivityLogin extends AppCompatActivity {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        AppController.setIsAppRunning("YES");
+//    }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        AppController.setIsAppRunning("NO");
+//    }
+
     private void makeJsonObjectRequest(final String URL, final String email, final String password) {
 
         pBar.setVisibility(View.VISIBLE);
@@ -149,6 +167,25 @@ public class ActivityLogin extends AppCompatActivity {
                                         jsonObject.getString("online")
                                 );
 
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("ID", AppData.loginDataType.getId());
+                                editor.putString("NAME", AppData.loginDataType.getName());
+                                editor.putString("SEX", AppData.loginDataType.getSex());
+                                editor.putString("EMAIL", AppData.loginDataType.getEmail());
+                                editor.putString("PASSWORD", AppData.loginDataType.getPassword());
+                                editor.putString("ABOUT", AppData.loginDataType.getAbout());
+                                editor.putString("BUSINESS", AppData.loginDataType.getBusiness());
+                                editor.putString("DOB", AppData.loginDataType.getDob());
+                                editor.putString("PHOTO", AppData.loginDataType.getPhoto());
+                                editor.putString("PHOYOTHUMB", AppData.loginDataType.getPhoto_thumb());
+                                editor.putString("REG_DATE", AppData.loginDataType.getRegisterDate());
+                                editor.putString("FACEBOOKID", AppData.loginDataType.getFacebookid());
+                                editor.putString("LASTSYNC", AppData.loginDataType.getLast_sync());
+                                editor.putString("FBURL", AppData.loginDataType.getFb_pic_url());
+                                editor.putString("AGE", AppData.loginDataType.getAge());
+                                editor.putString("ONLINE", AppData.loginDataType.getOnline());
+                                editor.commit();
+
                                 Toast.makeText(getApplicationContext(), response.getString("auth"), Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(ActivityLogin.this, ActivityLandingPage.class);
                                 startActivity(intent);
@@ -180,8 +217,12 @@ public class ActivityLogin extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("email", email);
                 params.put("password", password);
+                params.put("device_type", "1");
+                params.put("device_token", AppData.appRegId);
 
                 Log.d("After TAG", email + "  " + password);
+                Log.d("device_type", "1");
+                Log.d("device_token", AppData.appRegId);
                 return params;
             }
 

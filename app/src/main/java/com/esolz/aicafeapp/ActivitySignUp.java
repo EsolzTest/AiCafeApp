@@ -1,7 +1,9 @@
 package com.esolz.aicafeapp;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,7 +25,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -34,10 +35,10 @@ import com.esolz.aicafeapp.Adapter.AdapterCustomSpinner;
 import com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText;
 import com.esolz.aicafeapp.Datatype.LoginDataType;
 import com.esolz.aicafeapp.Datatype.RegistrationDataType;
+import com.esolz.aicafeapp.Helper.AppController;
 import com.esolz.aicafeapp.Helper.AppData;
 import com.esolz.aicafeapp.Helper.CircleTransform;
 import com.esolz.aicafeapp.Helper.ConnectionDetector;
-import com.esolz.aicafeapp.Helper.Trns;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
@@ -52,7 +53,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -99,6 +99,8 @@ public class ActivitySignUp extends AppCompatActivity {
 
     RegistrationDataType registrationDataType;
 
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +108,10 @@ public class ActivitySignUp extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         cd = new ConnectionDetector(ActivitySignUp.this);
+
+        sharedPreferences = getSharedPreferences("AppCredit", Context.MODE_PRIVATE);
+
+        Log.v("SignUpActivity MY", "Registration ID: " + AppData.appRegId);
 
         llCancel = (LinearLayout) findViewById(R.id.ll_cancel);
         imgProfile = (ImageView) findViewById(R.id.img_profile);
@@ -269,8 +275,11 @@ public class ActivitySignUp extends AppCompatActivity {
                                                                                              + "&password=" + URLEncoder.encode(etPass.getText().toString().trim(), "UTF-8")
                                                                                              + "&about=" + URLEncoder.encode(etAbout.getText().toString().trim(), "UTF-8")
                                                                                              + "&business=" + URLEncoder.encode(etCurrentBusiness.getText().toString().trim(), "UTF-8")
-                                                                                             + "&dob=" + URLEncoder.encode(etDOB.getText().toString().trim(), "UTF-8");
+                                                                                             + "&dob=" + etDOB.getText().toString().trim()
+                                                                                             + "&device_type=1&device_token=" + AppData.appRegId;
 
+                                                                                     Log.d("DOB WITH ENCODER", URLEncoder.encode(etDOB.getText().toString().trim(), "UTF-8"));
+                                                                                     Log.d("DOB ", etDOB.getText().toString().trim());
                                                                                      Log.d("reg url", registrationURL);
                                                                                      new AiCafeRegistration().execute();
 
@@ -487,6 +496,26 @@ public class ActivitySignUp extends AppCompatActivity {
                         "" + yourAge,
                         ""
                 );
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("ID", registrationDataType.getId());
+                editor.putString("NAME", registrationDataType.getName());
+                editor.putString("SEX", registrationDataType.getSex());
+                editor.putString("EMAIL", registrationDataType.getEmail());
+                editor.putString("PASSWORD", "");
+                editor.putString("ABOUT", registrationDataType.getAbout());
+                editor.putString("BUSINESS", registrationDataType.getBusiness());
+                editor.putString("DOB", registrationDataType.getDob());
+                editor.putString("PHOTO", registrationDataType.getPhoto());
+                editor.putString("PHOYOTHUMB", registrationDataType.getPhoto_thumb());
+                editor.putString("REG_DATE", registrationDataType.getRegisterDate());
+                editor.putString("FACEBOOKID", registrationDataType.getFacebookid());
+                editor.putString("LASTSYNC", registrationDataType.getLast_sync());
+                editor.putString("FBURL", registrationDataType.getFb_pic_url());
+                editor.putString("AGE", "" + yourAge);
+                editor.putString("ONLINE", "");
+                editor.commit();
+
                 Intent intent = new Intent(ActivitySignUp.this, ActivityLandingPage.class);
                 startActivity(intent);
                 finish();
@@ -673,6 +702,18 @@ public class ActivitySignUp extends AppCompatActivity {
 
         return inSampleSize;
     }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        AppController.setIsAppRunning("YES");
+//    }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        AppController.setIsAppRunning("NO");
+//    }
 
 }
 //http://www.esolz.co.in/lab9/aiCafe/iosapp/registration.php?name=name
