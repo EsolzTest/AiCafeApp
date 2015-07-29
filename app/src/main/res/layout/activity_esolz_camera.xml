@@ -21,6 +21,16 @@
         android:layout_marginBottom="15dp"
         android:background="@drawable/captureimgcustom"/>
 
+    <ImageView
+        android:id="@+id/captureimagefront"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/switchingcamera"/>
+
     <LinearLayout
         android:layout_width="100dp"
         android:layout_height="100dp"

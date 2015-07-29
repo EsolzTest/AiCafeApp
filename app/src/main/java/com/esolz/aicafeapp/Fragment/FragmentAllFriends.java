@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by ltp on 20/07/15.
+ * Created by Esolz Pvt. Ltd. on 20/07/15.
  */
 public class FragmentAllFriends extends Fragment {
 

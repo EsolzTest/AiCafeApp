@@ -1,16 +1,13 @@
 package com.esolz.aicafeapp.Adapter;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -36,14 +33,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Esolz Pvt. Ltd. on 22/07/15.
+ * Created by ltp on 28/07/15.
  */
-public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
+public class GroupChatAdapter  extends ArrayAdapter<ChatViewDataType> {
 
     ViewHolder holder;
     Context context;
@@ -60,7 +56,7 @@ public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
 
     int lazyCount = 0;
 
-    public SingleChatAdapter(Context context, int resource, int textViewResourceId,
+    public GroupChatAdapter(Context context, int resource, int textViewResourceId,
                              ArrayList<ChatViewDataType> chatViewDataTypeArrayList,
                              int totalResponseValue,
                              String idRec, ProgressBar toploader, ListView lView) {
@@ -197,17 +193,17 @@ public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
             }
         }
 
-        if (totalResponseValue > getCount()) {
-            if (position == (getCount() - 1)) {
-                if (isDataRetrving == false) {
-           //======Lazy loading start.....
-                    getAllChatDetails(AppData.loginDataType.getId(), idRec,
-                            "" + getCount(), "");
-                    //   Toast.makeText(context, "here..", Toast.LENGTH_SHORT).show();
-                    //Log.i("CHAT", "Fire here..");
-                }
-            }
-        }
+//        if (totalResponseValue > getCount()) {
+//            if (position == (getCount() - 1)) {
+//                if (isDataRetrving == false) {
+//                    //======Lazy loading start.....
+//                    getAllChatDetails(AppData.loginDataType.getId(), idRec,
+//                            "" + getCount(), "");
+//                    //   Toast.makeText(context, "here..", Toast.LENGTH_SHORT).show();
+//                    //Log.i("CHAT", "Fire here..");
+//                }
+//            }
+//        }
 
 
         return convertView;
@@ -383,3 +379,4 @@ public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
     }
 
 }
+

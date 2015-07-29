@@ -47,7 +47,7 @@ public class ActivitySplash extends AppCompatActivity {
 
         cd = new ConnectionDetector(ActivitySplash.this);
         if (cd.isConnectingToInternet()) {
-            if (checkPlayServices()) {
+            //if (checkPlayServices()) {
                 gcm = GoogleCloudMessaging.getInstance(ActivitySplash.this);
                 regid = getRegistrationId(ActivitySplash.this);
 
@@ -58,9 +58,9 @@ public class ActivitySplash extends AppCompatActivity {
                     AppData.appRegId = regid;
                     sendRegistrationIdToBackend();
                 }
-            } else {
-                Log.i(TAG, "No valid Google Play Services APK found.");
-            }
+//            } else {
+//                Log.i(TAG, "No valid Google Play Services APK found.");
+//            }
         }
 
         new Handler().postDelayed(new Runnable() {
@@ -69,33 +69,58 @@ public class ActivitySplash extends AppCompatActivity {
             public void run() {
                 // TODO Auto-generated method stub
 
-                if (sharedPreferences.getString("ID", "").equals("")) {
-                    Intent intent = new Intent(ActivitySplash.this, ActivityLogin.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    AppData.loginDataType = new LoginDataType(
-                            sharedPreferences.getString("ID", ""),
-                            sharedPreferences.getString("NAME", ""),
-                            sharedPreferences.getString("SEX", ""),
-                            sharedPreferences.getString("EMAIL", ""),
-                            sharedPreferences.getString("PASSWORD", ""),
-                            sharedPreferences.getString("ABOUT", ""),
-                            sharedPreferences.getString("BUSINESS", ""),
-                            sharedPreferences.getString("DOB", ""),
-                            sharedPreferences.getString("PHOTO", ""),
-                            sharedPreferences.getString("PHOYOTHUMB", ""),
-                            sharedPreferences.getString("REG_DATE", ""),
-                            sharedPreferences.getString("FACEBOOKID", ""),
-                            sharedPreferences.getString("LASTSYNC", ""),
-                            sharedPreferences.getString("FBURL", ""),
-                            sharedPreferences.getString("AGE", ""),
-                            sharedPreferences.getString("ONLINE", "")
-                    );
-                    Intent intent = new Intent(ActivitySplash.this, ActivityLandingPage.class);
-                    startActivity(intent);
-                    finish();
-                }
+//                try {
+//                    AppData.loginDataType = new LoginDataType(
+//                            sharedPreferences.getString("ID", ""),
+//                            sharedPreferences.getString("NAME", ""),
+//                            sharedPreferences.getString("SEX", ""),
+//                            sharedPreferences.getString("EMAIL", ""),
+//                            sharedPreferences.getString("PASSWORD", ""),
+//                            sharedPreferences.getString("ABOUT", ""),
+//                            sharedPreferences.getString("BUSINESS", ""),
+//                            sharedPreferences.getString("DOB", ""),
+//                            sharedPreferences.getString("PHOTO", ""),
+//                            sharedPreferences.getString("PHOYOTHUMB", ""),
+//                            sharedPreferences.getString("REG_DATE", ""),
+//                            sharedPreferences.getString("FACEBOOKID", ""),
+//                            sharedPreferences.getString("LASTSYNC", ""),
+//                            sharedPreferences.getString("FBURL", ""),
+//                            sharedPreferences.getString("AGE", ""),
+//                            sharedPreferences.getString("ONLINE", "")
+//                    );
+//                    Intent intent = new Intent(ActivitySplash.this, ActivityLandingPage.class);
+//                    intent.putExtra("NotiSendId", getIntent().getExtras().getString("NotiSendId"));
+//                    startActivity(intent);
+//                    finish();
+//                } catch (Exception e) {
+                    if (sharedPreferences.getString("ID", "").equals("")) {
+                        Intent intent = new Intent(ActivitySplash.this, ActivityLogin.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        AppData.loginDataType = new LoginDataType(
+                                sharedPreferences.getString("ID", ""),
+                                sharedPreferences.getString("NAME", ""),
+                                sharedPreferences.getString("SEX", ""),
+                                sharedPreferences.getString("EMAIL", ""),
+                                sharedPreferences.getString("PASSWORD", ""),
+                                sharedPreferences.getString("ABOUT", ""),
+                                sharedPreferences.getString("BUSINESS", ""),
+                                sharedPreferences.getString("DOB", ""),
+                                sharedPreferences.getString("PHOTO", ""),
+                                sharedPreferences.getString("PHOYOTHUMB", ""),
+                                sharedPreferences.getString("REG_DATE", ""),
+                                sharedPreferences.getString("FACEBOOKID", ""),
+                                sharedPreferences.getString("LASTSYNC", ""),
+                                sharedPreferences.getString("FBURL", ""),
+                                sharedPreferences.getString("AGE", ""),
+                                sharedPreferences.getString("ONLINE", "")
+                        );
+                        Intent intent = new Intent(ActivitySplash.this, ActivityLandingPage.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                //}
 
             }
         }, 3000);

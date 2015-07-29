@@ -230,9 +230,9 @@ public class FragmentProfile extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("Output : ", "Error: " + error.getMessage());
-                Toast.makeText(getActivity(),
-                        "Server not responding...!", Toast.LENGTH_LONG)
-                        .show();
+//                Toast.makeText(getActivity(),
+//                        "Server not responding...!", Toast.LENGTH_LONG)
+//                        .show();
                 // pBAR.setVisibility(View.GONE);
             }
         }) {

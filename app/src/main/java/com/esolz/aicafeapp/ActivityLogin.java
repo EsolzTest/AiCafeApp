@@ -65,7 +65,7 @@ public class ActivityLogin extends AppCompatActivity {
         //llFBLogin = (LinearLayout) findViewById(R.id.ll_fblogin);
         pBar = (ProgressBar) findViewById(R.id.pbar);
 
-        etEmail.setText("rahul.roy@esolzmail.com");
+        etEmail.setText("soutrik@esolzmail.com");
         etPassword.setText("123456");
 
         btnLogin.setOnClickListener(new View.OnClickListener() {

@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.esolz.aicafeapp.ActivityLandingPage;
 import com.esolz.aicafeapp.ActivitySplash;
 import com.esolz.aicafeapp.Helper.AppController;
 import com.esolz.aicafeapp.R;
@@ -26,10 +28,8 @@ public class GCMIntentService extends IntentService {
 
     String TAG = "GcmIntentService";
 
-    public static String MY_EVENT_ACTION = "com.example.androidintentservice.Chat";
+    public static String MY_EVENT_ACTION = "My_Events";
 
-    String chat_id = "", send_from = "", send_to = "", message = "", type = "", stickername = "", chat_time = "", chat_date = "",
-            status = "", file_link = "", file_available = "", name = "", photo = "", photo_thumb = "";
 
     public GCMIntentService() {
         super("GcmIntentService");
@@ -43,20 +43,15 @@ public class GCMIntentService extends IntentService {
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         String messageType = gcm.getMessageType(intent);
 
-        if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
-            /**
-             * Filter messages based on message type. Since it is likely that GCM
-             * will be extended in the future with new message types, just ignore
-             * any message types you're not interested in, or that you don't
-             * recognize.
-             */
+        if (!extras.isEmpty()) {
+
             if (GoogleCloudMessaging.
                     MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                sendNotification("Send error: " + extras.toString(), "error", "");
+                //sendNotification("Send error: " + extras.toString(), "error", "");
             } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " +
-                        extras.toString(), "lostMessage", "");
+                //sendNotification("Deleted messages on server: " +
+                //extras.toString(), "lostMessage", "");
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
@@ -65,20 +60,23 @@ public class GCMIntentService extends IntentService {
                 // Post notification of received message.
                 Log.i(TAG, "Received: " + extras.toString());
 
-                chat_id = extras.getString("chat_id");
-                send_from = extras.getString("send_from");
-                send_to = extras.getString("send_to");
-                message = extras.getString("message");
-                type = extras.getString("type");
-                stickername = extras.getString("stickername");
-                chat_time = extras.getString("2");
-                chat_date = extras.getString("chat_date");
-                status = extras.getString("status");
-                file_link = extras.getString("file_link");
-                file_available = extras.getString("file_available");
-                name = extras.getString("name");
-                photo = extras.getString("photo");
-                photo_thumb = extras.getString("photo_thumb");
+//                final String chat_id = "", send_from = "", send_to = "", message = "", type = "", stickername = "", chat_time = "", chat_date = "",
+//                        status = "", file_link = "", file_available = "", name = "", photo = "", photo_thumb = "";
+
+                final String chat_id = extras.getString("chat_id");
+                final String send_from = extras.getString("send_from");
+                final String send_to = extras.getString("send_to");
+                final String message = extras.getString("message");
+                final String type = extras.getString("type");
+                final String stickername = extras.getString("stickername");
+                final String chat_time = extras.getString("2");
+                final String chat_date = extras.getString("chat_date");
+                final String status = extras.getString("status");
+                final String file_link = extras.getString("file_link");
+                final String file_available = extras.getString("file_available");
+                final String name = extras.getString("name");
+                final String photo = extras.getString("photo");
+                final String photo_thumb = extras.getString("photo_thumb");
 
 //                /*
 //                Bundle[{=, =Unread,
@@ -94,45 +92,41 @@ public class GCMIntentService extends IntentService {
 //                =O, android.support.content.wakelockid=1,
 //                collapse_key=do_not_collapse, =43}]
 //                 */
-//
-//                //String msg = extras.getString("message");
-//                String msg = extras.toString();
-//                String messageFor = extras.getString("for");
 
-//                Log.d("NOTIFICATION## ", message);
-//                if (AppData.isChatAlive) {
-//                    ActivityChatMessage.updateByNotification(msg);
-//                    sendNotification(msg, messageFor);
-//                } else {
-//                    sendNotification(message, name, send_to);
-//                }
 
                 if (AppController.isAppRunning().equals("YES")) {
+
                     Intent brodIntent = new Intent();
 
                     brodIntent.setAction(MY_EVENT_ACTION);
-                    brodIntent.addCategory(Intent.CATEGORY_DEFAULT);
-
-                    brodIntent.putExtra("chat_id", chat_id);
-                    brodIntent.putExtra("send_from", send_from);
-                    brodIntent.putExtra("send_to", send_to);
-                    brodIntent.putExtra("message", message);
-                    brodIntent.putExtra("type", type);
-                    brodIntent.putExtra("stickername", stickername);
-                    brodIntent.putExtra("chat_time", chat_time);
-                    brodIntent.putExtra("chat_date", chat_date);
-                    brodIntent.putExtra("status", status);
-                    brodIntent.putExtra("file_link", file_link);
-                    brodIntent.putExtra("file_available", file_available);
-                    brodIntent.putExtra("name", name);
-                    brodIntent.putExtra("photo", photo);
-                    brodIntent.putExtra("photo_thumb", photo_thumb);
+                    // brodIntent.addCategory(Intent.CATEGORY_DEFAULT);
+                    brodIntent.putExtra("chat_id", "" + chat_id);
+                    brodIntent.putExtra("send_from", "" + send_from);
+                    brodIntent.putExtra("send_to", "" + send_to);
+                    brodIntent.putExtra("message", "" + message);
+                    brodIntent.putExtra("type", "" + type);
+                    brodIntent.putExtra("stickername", "" + stickername);
+                    brodIntent.putExtra("chat_time", "" + chat_time);
+                    brodIntent.putExtra("chat_date", "" + chat_date);
+                    brodIntent.putExtra("status", "" + status);
+                    brodIntent.putExtra("file_link", "" + file_link);
+                    brodIntent.putExtra("file_available", "" + file_available);
+                    brodIntent.putExtra("name", "" + name);
+                    brodIntent.putExtra("photo", "" + photo);
+                    brodIntent.putExtra("photo_thumb", "" + photo_thumb);
 
                     sendBroadcast(brodIntent);
-                } else {
-                    sendNotification(message, name, send_to);
-                }
 
+                    Log.d("----TAG----", "Received new msg.....");
+                } else {
+                    if (type.equals("s")) {
+                        sendNotification(name + " sent a sticker ", "", send_to);
+                    } else if (type.equals("m")) {
+                        sendNotification(message, name, send_to);
+                    } else {
+                        sendNotification(message, name, send_to);
+                    }
+                }
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -149,11 +143,11 @@ public class GCMIntentService extends IntentService {
         String notificationTitle = "";
 
 
-        Intent intentLand = new Intent(this, ActivitySplash.class);
-        intentLand.putExtra("Notification", "notify");
-        intentLand.putExtra("send_to", sendTo);
-
-        contentIntent = PendingIntent.getActivity(this, 0, intentLand, 0);
+//        Intent intentLand = new Intent(this, ActivityLandingPage.class);
+//        intentLand.putExtra("Notification", "notify");
+//        intentLand.putExtra("NotiSendId", sendTo);
+//
+//        contentIntent = PendingIntent.getActivity(this, 0, intentLand, 0);
 
         notificationTitle = name;
 

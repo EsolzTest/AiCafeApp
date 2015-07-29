@@ -37,6 +37,7 @@ import com.esolz.aicafeapp.Fragment.FragmentChatRoom;
 import com.esolz.aicafeapp.Fragment.FragmentFriendRequest;
 import com.esolz.aicafeapp.Fragment.FragmentProfile;
 import com.esolz.aicafeapp.Fragment.FragmentSettings;
+import com.esolz.aicafeapp.Fragment.FragmentSingleChat;
 import com.esolz.aicafeapp.Fragment.FragmentStoreMap;
 import com.esolz.aicafeapp.Fragment.FragmentStoreNow;
 import com.esolz.aicafeapp.Helper.AppController;
@@ -109,33 +110,24 @@ public class ActivityLandingPage extends AppCompatActivity {
             }
         });
 
-        Intent intentMyIntentService = new Intent(this, GCMIntentService.class);
-        intentMyIntentService.putExtra(GCMIntentService.MY_EVENT_ACTION, "AiCafe");
-        startService(intentMyIntentService);
 
-        myReceiver = new MyReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(GCMIntentService.MY_EVENT_ACTION);
-        registerReceiver(myReceiver, intentFilter);
+        try {
+//        if(getIntent().getExtras().getString("")) {
+            Bundle bundle = new Bundle();
+            bundle.putString("USER_ID", getIntent().getExtras().getString("NotiSendId"));
+            bundle.putString("Page", "FragmentProfile");
 
-
-//        try {
-////        if(getIntent().getExtras().getString("")) {
-//            Bundle bundle = new Bundle();
-//            bundle.putString("USER_ID", getIntent().getExtras().getString("send_to"));
-//            bundle.putString("Page", "FragmentProfile");
-//
-//            fragmentTransaction = fragmentManager.beginTransaction();
-//            FragmentSingleChat fragmentSingleChat = new FragmentSingleChat();
-//            fragmentSingleChat.setArguments(bundle);
-//            fragmentTransaction.replace(R.id.fragment_container, fragmentSingleChat);
-//            fragmentTransaction.commit();
-//        } catch (Exception e) {
-        fragmentTransaction = fragmentManager.beginTransaction();
-        FragmentProfile fragmentProfile = new FragmentProfile();
-        fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
-        fragmentTransaction.commit();
-        //}
+            fragmentTransaction = fragmentManager.beginTransaction();
+            FragmentSingleChat fragmentSingleChat = new FragmentSingleChat();
+            fragmentSingleChat.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fragment_container, fragmentSingleChat);
+            fragmentTransaction.commit();
+        } catch (Exception e) {
+            fragmentTransaction = fragmentManager.beginTransaction();
+            FragmentProfile fragmentProfile = new FragmentProfile();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
+            fragmentTransaction.commit();
+        }
 
         llProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -490,8 +482,13 @@ public class ActivityLandingPage extends AppCompatActivity {
                         try {
                             JSONObject response = new JSONObject(stringResponse);
                             if (response.getString("auth").equals("logout success")) {
-//                                Intent intent = new Intent(ActivityLandingPage.this, ActivityLogin.class);
-//                                startActivity(intent);
+
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.clear();
+                                editor.commit();
+
+                                Intent intent = new Intent(ActivityLandingPage.this, ActivityLogin.class);
+                                startActivity(intent);
                                 finish();
                             } else {
                                 Toast.makeText(getApplicationContext(), response.getString("auth"), Toast.LENGTH_SHORT).show();
@@ -534,6 +531,13 @@ public class ActivityLandingPage extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+
+//        myReceiver = new MyReceiver();
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction(GCMIntentService.MY_EVENT_ACTION);
+//        registerReceiver(myReceiver, intentFilter);
+
+
         super.onStart();
     }
 
@@ -541,12 +545,12 @@ public class ActivityLandingPage extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         AppController.setIsAppRunning("NO");
-        Toast.makeText(getApplicationContext(), "Destroy" + AppController.isAppRunning(), Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getApplicationContext(), "Destroy" + AppController.isAppRunning(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onStop() {
-        unregisterReceiver(myReceiver);
+        // unregisterReceiver(myReceiver);
         super.onStop();
     }
 
@@ -563,32 +567,26 @@ public class ActivityLandingPage extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "test receiver", Toast.LENGTH_SHORT).show();
 
-//            String datapassed = arg1.getStringExtra("DATAPASSED");
-//            if (datapassed.equals("done")) {
-//                // ***********************************Fragment
-//                fragmentManager = getSupportFragmentManager();
-//                fragmentTransaction = fragmentManager.beginTransaction();
-//                LandingPageFeedListing diet_fragment = new LandingPageFeedListing();
-//                fragmentTransaction.replace(R.id.frglandingbucket,
-//                        diet_fragment);
-//                fragmentTransaction.commit();
-//                // ***********************************
-//            }
 
-            Log.d("chat_id =====", intent.getStringExtra("chat_id"));
-            Log.d("send_from =====", intent.getStringExtra("send_from"));
-            Log.d("send_to =====", intent.getStringExtra("send_to"));
-            Log.d("message =====", intent.getStringExtra("message"));
-            Log.d("type =====", intent.getStringExtra("type"));
-            Log.d("stickername =====", intent.getStringExtra("stickername"));
-            Log.d("chat_time =====", intent.getStringExtra("chat_time"));
-            Log.d("chat_date =====", intent.getStringExtra("chat_date"));
-            Log.d("status =====", intent.getStringExtra("status"));
-            Log.d("file_link =====", intent.getStringExtra("file_link"));
-            Log.d("file_available =====", intent.getStringExtra("file_available"));
-            Log.d("name =====", intent.getStringExtra("name"));
-            Log.d("photo =====", intent.getStringExtra("photo"));
-            Log.d("photo_thumb =====", intent.getStringExtra("photo_thumb"));
+            try {
+                Log.d("chat_id =====", intent.getStringExtra("chat_id"));
+                Log.d("send_from =====", intent.getStringExtra("send_from"));
+                Log.d("send_to =====", intent.getStringExtra("send_to"));
+                Log.d("message =====", intent.getStringExtra("message"));
+                Log.d("type =====", intent.getStringExtra("type"));
+                Log.d("stickername =====", intent.getStringExtra("stickername"));
+                Log.d("chat_time =====", intent.getStringExtra("chat_time"));
+                Log.d("chat_date =====", intent.getStringExtra("chat_date"));
+                Log.d("status =====", intent.getStringExtra("status"));
+                Log.d("file_link =====", intent.getStringExtra("file_link"));
+                Log.d("file_available =====", intent.getStringExtra("file_available"));
+                Log.d("name =====", intent.getStringExtra("name"));
+                Log.d("photo =====", intent.getStringExtra("photo"));
+                Log.d("photo_thumb =====", intent.getStringExtra("photo_thumb"));
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "" + e.toString(), Toast.LENGTH_SHORT).show();
+            }
+
 
         }
 

@@ -1,5 +1,9 @@
 package com.esolz.aicafeapp.Fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,6 +40,7 @@ import com.esolz.aicafeapp.Helper.AppController;
 import com.esolz.aicafeapp.Helper.AppData;
 import com.esolz.aicafeapp.Helper.ConnectionDetector;
 import com.esolz.aicafeapp.R;
+import com.esolz.aicafeapp.gcmnotification.GCMIntentService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,19 +63,19 @@ public class FragmentSingleChat extends Fragment {
     TextView txtPageTitle, txtMSGCounter;
     ImageView imgBack, imgMSG;
     DrawerLayout drawerLayout;
-
+    MyReceiver myReceiver;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
-
+    final int CHUNK_SIZE = 10;
     LinearLayout llSendChat, llStickerContainer;
     RelativeLayout llStickerChat;
     GridView gridView;
     HorizontalScrollView horizontalScrollView;
     ListView listSingleChat;
-
+    ProgressBar toploader;
     ChatViewDataType chatViewDataType;
     ArrayList<ChatViewDataType> chatViewDataTypeArrayList;
-
+    LinearLayout progressPanelForSent;
     ProgressBar pbarSingleChat;
     OpenSansRegularTextView txtError;
     OpenSansSemiboldEditText etChatSend;
@@ -78,6 +83,81 @@ public class FragmentSingleChat extends Fragment {
     ConnectionDetector cd;
     SingleChatAdapter singleChatAdapter;
     int totalResponseValue = 0;
+
+    String userId = "", pageIndicator = "";
+
+
+    private class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            // TODO Auto-generated method stub
+
+            //Toast.makeText(getActivity(), "test receiver in fragment", Toast.LENGTH_SHORT).show();
+
+
+            try {
+                Log.d("chat_id =====", intent.getStringExtra("chat_id"));
+                Log.d("send_from =====", intent.getStringExtra("send_from"));
+                Log.d("send_to =====", intent.getStringExtra("send_to"));
+                Log.d("message =====", intent.getStringExtra("message"));
+                Log.d("type =====", intent.getStringExtra("type"));
+                Log.d("stickername =====", intent.getStringExtra("stickername"));
+                Log.d("chat_time =====", intent.getStringExtra("chat_time"));
+                Log.d("chat_date =====", intent.getStringExtra("chat_date"));
+                Log.d("status =====", intent.getStringExtra("status"));
+                Log.d("file_link =====", intent.getStringExtra("file_link"));
+                Log.d("file_available =====", intent.getStringExtra("file_available"));
+                Log.d("name =====", intent.getStringExtra("name"));
+                Log.d("photo =====", intent.getStringExtra("photo"));
+                Log.d("photo_thumb =====", intent.getStringExtra("photo_thumb"));
+
+                ChatViewDataType chatViewDataType = new ChatViewDataType(
+                        intent.getStringExtra("chat_id"),
+                        intent.getStringExtra("send_from"),
+                        intent.getStringExtra("send_to"),
+                        intent.getStringExtra("message"),
+                        intent.getStringExtra("type"),
+                        intent.getStringExtra("stickername"),
+                        intent.getStringExtra("chat_time"),
+                        intent.getStringExtra("chat_date"),
+                        intent.getStringExtra("status"),
+                        intent.getStringExtra("file_link"),
+                        intent.getStringExtra("file_available"),
+                        intent.getStringExtra("name"),
+                        intent.getStringExtra("photo"),
+                        intent.getStringExtra("photo_thumb"));
+                // Toast.makeText(getActivity(), "Add me here...", Toast.LENGTH_SHORT).show();
+                singleChatAdapter.addFromReceiver(chatViewDataType);
+                //singleChatAdapter.notifyDataSetChanged();
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), "" + e.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        myReceiver = new MyReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(GCMIntentService.MY_EVENT_ACTION);
+        getActivity().registerReceiver(myReceiver, intentFilter);
+    }
+
+    @Override
+    public void onStop() {
+        try {
+            getActivity().unregisterReceiver(myReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onStop();
+    }
 
     @Nullable
     @Override
@@ -91,6 +171,14 @@ public class FragmentSingleChat extends Fragment {
 //        Log.d("=======send_id", AppData.loginDataType.getId());
 //        Log.d("=======rec_id", getArguments().getString("USER_ID"));
 
+//        try {
+//
+//        } catch (Exception e) {
+//
+//        }
+        toploader = (ProgressBar) view.findViewById(R.id.pbar_single_chat);
+        progressPanelForSent = (LinearLayout) view.findViewById(R.id.loaderbucket);
+        progressPanelForSent.setVisibility(View.GONE);
         llPipeContainer = (LinearLayout) getActivity().findViewById(R.id.ll_pipe_container);
         slidingNow = (LinearLayout) getActivity().findViewById(R.id.slidingnow);
         rlMSGContainer = (RelativeLayout) getActivity().findViewById(R.id.rl_msgcontainer);
@@ -190,13 +278,18 @@ public class FragmentSingleChat extends Fragment {
                 horizontalScrollView.setVisibility(View.GONE);
                 if (cd.isConnectingToInternet()) {
                     try {
-                        sendMessage(" http://www.esolz.co.in/lab9/aiCafe/iosapp/sendSingleUser.php",
-                                AppData.loginDataType.getId(),
-                                getArguments().getString("USER_ID"),
-                                /*URLEncoder.encode(*/etChatSend.getText().toString().trim()/*, "UTF-8")*/,
-                                "m",
-                                "",
-                                "O");
+
+                        String etReplace = etChatSend.getText().toString().trim()/*.replace("/", "//")*/;
+
+                        Log.d("!!! Replace Et ", etReplace);
+
+//                        sendMessage("http://www.esolz.co.in/lab9/aiCafe/iosapp/sendSingleUser.php",
+//                                AppData.loginDataType.getId(),
+//                                getArguments().getString("USER_ID"), etReplace
+//                                /*URLEncoder.encode(etChatSend.getText().toString().trim(), "UTF-8")*/,
+//                                "m",
+//                                "",
+//                                "O");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -217,11 +310,14 @@ public class FragmentSingleChat extends Fragment {
 
         txtPageTitle.setText("Chat");
 
+        pageIndicator = getArguments().getString("Page");
+
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString("USER_ID", getArguments().getString("USER_ID"));
+                //bundle.putString("Page", "Chatroom");
 
                 if (getArguments().getString("Page").equals("FragmentUserInformation")) {
                     fragmentTransaction = fragmentManager.beginTransaction();
@@ -281,31 +377,43 @@ public class FragmentSingleChat extends Fragment {
 
     private void sendMessage(final String URL, final String sendID, final String recID,
                              final String message, final String type, final String stikername, final String chatType) {
-
+        progressPanelForSent.setVisibility(View.VISIBLE);
         StringRequest sr = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String stringResponse) {
-                        Log.d("Response ", stringResponse);
+                        Log.i("CHAT RES SAKU", stringResponse);
+                        Log.i("CHAT send", URL);
                         try {
                             JSONObject response = new JSONObject(stringResponse);
                             if (response.getString("status").equals("success")) {
-
-                                getAllChatDetails("http://203.196.159.37//lab9/aiCafe/iosapp/chat_view.php",
-                                        AppData.loginDataType.getId(),
-                                        getArguments().getString("USER_ID"),
-                                        "0",
-                                        "150");
-
-
+                                JSONObject jInnerObj = response.getJSONObject("details");
+                                chatViewDataType = new ChatViewDataType(
+                                        jInnerObj.getString("chat_id"),
+                                        jInnerObj.getString("send_from"),
+                                        jInnerObj.getString("send_to"),
+                                        jInnerObj.getString("message"),
+                                        jInnerObj.getString("type"),
+                                        jInnerObj.getString("stickername"),
+                                        jInnerObj.getString("chat_time"),
+                                        jInnerObj.getString("chat_date"),
+                                        jInnerObj.getString("status"),
+                                        jInnerObj.getString("file_link"),
+                                        jInnerObj.getString("file_available"),
+                                        jInnerObj.getString("name"),
+                                        jInnerObj.getString("photo"),
+                                        jInnerObj.getString("photo_thumb")
+                                );
+                                singleChatAdapter.addFromReceiver(chatViewDataType);
+                                progressPanelForSent.setVisibility(View.GONE);
                                 etChatSend.setText("");
-
                                 Toast.makeText(getActivity(), "Message send.", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(getActivity(), "Message not send.", Toast.LENGTH_LONG).show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Log.i("CHAT RES SAKU", e.toString());
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -325,9 +433,9 @@ public class FragmentSingleChat extends Fragment {
                 params.put("stickername", stikername);
                 params.put("chat_type", chatType);
 
-                Log.d("M send_id", sendID);
-                Log.d("M rec_id", recID);
-                Log.d("M message", message);
+//                Log.d("M send_id", sendID);
+//                Log.d("M rec_id", recID);
+//                Log.d("M message", message);
 
                 return params;
             }
@@ -438,13 +546,13 @@ public class FragmentSingleChat extends Fragment {
         Toast.makeText(getActivity(), "Pause" + AppController.isAppRunning(), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onStop() {
-        // TODO Auto-generated method stub
-        super.onStop();
-        AppController.setIsAppRunning("NO");
-        Toast.makeText(getActivity(), "Stop" + AppController.isAppRunning(), Toast.LENGTH_SHORT).show();
-    }
+//    @Override
+//    public void onStop() {
+//        // TODO Auto-generated method stub
+//        super.onStop();
+//        AppController.setIsAppRunning("NO");
+//        Toast.makeText(getActivity(), "Stop" + AppController.isAppRunning(), Toast.LENGTH_SHORT).show();
+//    }
 
     private void getAllChatDetails(final String URL, final String sendID, final String recID, final String start, final String records) {
 
@@ -482,8 +590,8 @@ public class FragmentSingleChat extends Fragment {
                                                 jsonObject.getString("file_link"),
                                                 jsonObject.getString("file_available"),
                                                 jsonObject.getString("name"),
-                                                getArguments().getString("FriendImg"),
-                                                getArguments().getString("FriendImg")
+                                                jsonObject.getString("photo"),
+                                                jsonObject.getString("photo_thumb")
                                         );
                                         chatViewDataTypeArrayList.add(chatViewDataType);
                                         //Collections.reverse(chatViewDataTypeArrayList);
@@ -493,7 +601,7 @@ public class FragmentSingleChat extends Fragment {
                                             0, 0,
                                             chatViewDataTypeArrayList,
                                             totalResponseValue,
-                                            getArguments().getString("USER_ID"));
+                                            AppData.loginDataType.getId(), toploader, listSingleChat);
                                     listSingleChat.setAdapter(singleChatAdapter);
                                 }
                             } else {
@@ -509,9 +617,8 @@ public class FragmentSingleChat extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("Output : ", "Error: " + error.getMessage());
-                Toast.makeText(getActivity(),
-                        "Server not responding...!", Toast.LENGTH_LONG)
-                        .show();
+                Log.d("Volley error : ", error.toString());
+                Toast.makeText(getActivity(), "Server not responding...!volley", Toast.LENGTH_LONG).show();
                 // pBAR.setVisibility(View.GONE);
             }
         }) {
@@ -521,12 +628,12 @@ public class FragmentSingleChat extends Fragment {
                 params.put("send_id", sendID);
                 params.put("rec_id", recID);
                 params.put("start", start);
-                params.put("records", records);
+                params.put("records", "" + CHUNK_SIZE);
 
-                Log.d("send_id", sendID);
-                Log.d("rec_id", recID);
-                Log.d("start", start);
-                Log.d("records", records);
+//                Log.d("send_id", sendID);
+//                Log.d("rec_id", recID);
+//                Log.d("start", start);
+//                Log.d("records", records);
 
                 return params;
             }

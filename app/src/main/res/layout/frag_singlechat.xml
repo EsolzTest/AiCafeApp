@@ -10,11 +10,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_bottom">
 
-        <ProgressBar
-            android:id="@+id/pbar_single_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
 
         <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
             android:id="@+id/txt_error"
@@ -29,9 +24,42 @@
             android:id="@+id/list_single_chat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:stackFromBottom="true"
-            android:transcriptMode="normal"></ListView>
+            android:layout_above="@+id/loaderbucket"
+            android:rotationX="180"
+            android:scrollbars="none"></ListView>
+
+        <ProgressBar
+            android:id="@+id/progrontent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:indeterminate="false"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/loaderbucket"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#80ffffff"
+            android:gravity="center"
+            android:padding="8dp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+
+            <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Sending data..."
+                android:textColor="#000000"/>
+        </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
@@ -73,7 +101,7 @@
                 <com.esolz.aicafeapp.Customviews.OpenSansSemiboldEditText
                     android:id="@+id/et_chat_send"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="65dp"
                     android:background="#00FFFFFF"
                     android:gravity="left|top"
                     android:inputType="textMultiLine"
@@ -122,5 +150,14 @@
             </LinearLayout>
         </HorizontalScrollView>
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pbar_single_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
 
 </RelativeLayout>

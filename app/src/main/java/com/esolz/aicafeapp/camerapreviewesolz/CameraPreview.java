@@ -38,8 +38,8 @@ import android.widget.Toast;
  */
 @SuppressLint("NewApi")
 @SuppressWarnings("deprecation")
-public class CameraPreview extends SurfaceView implements
-		SurfaceHolder.Callback {
+public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+
 	private static boolean DEBUGGING = true;
 	private static final String LOG_TAG = "CameraPreviewSample";
 	private static final String CAMERA_PARAM_ORIENTATION = "orientation";
@@ -109,10 +109,10 @@ public class CameraPreview extends SurfaceView implements
 			if (Camera.getNumberOfCameras() > cameraId) {
 				mCameraId = cameraId;
 			} else {
-				mCameraId = 0;
+				mCameraId = 1;
 			}
 		} else {
-			mCameraId = 0;
+			mCameraId = 1;
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {

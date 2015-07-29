@@ -2,6 +2,7 @@ package com.esolz.aicafeapp.Fragment;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -67,16 +68,16 @@ public class FragmentUserInformation extends Fragment {
     View view;
     LinearLayout llPipeContainer, slidingNow, llBack;
     RelativeLayout rlMSGContainer;
-    OpenSansSemiboldTextView txtPageTitle;
-    OpenSansRegularTextView txtMSGCounter, txtError;
-    ImageView imgBack, imgMSG;
+    OpenSansSemiboldTextView txtPageTitle, txtreport, txtcancel, txtblock, txtunfriend;
+    OpenSansRegularTextView txtMSGCounter;
+    ImageView imgBack, imgMSG, addimg;
     DrawerLayout drawerLayout;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
     ConnectionDetector cd;
-
+    String frndstatus;
     ImageView imgProfile;
     OpenSansSemiboldTextView txtProfileName;
     OpenSansRegularTextView txtBusinessPro, txtAge, txtGender, txtStatus, txtProfileAbout;
@@ -87,13 +88,13 @@ public class FragmentUserInformation extends Fragment {
     ProgressDialog progressDialog;
     String urlResponseAddFriend = "", exceptionAddFriend = "", urlResponseReport = "", exceptionReport = "";
 
-    Dialog dialogReport;
+    Dialog dialogReport, dialogmore;
     OpenSansSemiboldEditText etReport;
     ProgressBar reportProBar;
     RelativeLayout rlReportSend;
     ImageView imgCancel;
 
-    String imgSender = "";
+    String imgSender = "", pageIndicator = "";
 
     @Nullable
     @Override
@@ -116,6 +117,7 @@ public class FragmentUserInformation extends Fragment {
         txtMSGCounter = (OpenSansRegularTextView) getActivity().findViewById(R.id.txt_msg_counter);
         imgMSG = (ImageView) getActivity().findViewById(R.id.img_msg);
 
+        addimg = (ImageView) getActivity().findViewById(R.id.addimg);
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
@@ -133,10 +135,11 @@ public class FragmentUserInformation extends Fragment {
         prgUserInformation = (ProgressBar) view.findViewById(R.id.prg_user_information);
         prgUserInformation.setVisibility(View.GONE);
 
+
         dialogReport = new Dialog(getActivity(), R.style.DialogSlideAnim);
         dialogReport.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogReport.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialogReport.getWindow().setGravity(Gravity.CENTER);
+        dialogReport.getWindow().setGravity(Gravity.BOTTOM);
         dialogReport.setContentView(R.layout.dialog_report_send);
         dialogReport.setCanceledOnTouchOutside(true);
 
@@ -173,6 +176,45 @@ public class FragmentUserInformation extends Fragment {
                 }
             }
         });
+
+        dialogmore = new Dialog(getActivity(), R.style.DialogSlideAnim);
+        dialogmore.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogmore.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialogmore.getWindow().setGravity(Gravity.BOTTOM);
+        dialogmore.setContentView(R.layout.dialog_more);
+        dialogmore.setCanceledOnTouchOutside(true);
+        txtreport = (OpenSansSemiboldTextView) dialogmore.findViewById(R.id.txtreport);
+        txtcancel = (OpenSansSemiboldTextView) dialogmore.findViewById(R.id.txtcancel);
+        txtblock = (OpenSansSemiboldTextView) dialogmore.findViewById(R.id.txtblock);
+        txtunfriend = (OpenSansSemiboldTextView) dialogmore.findViewById(R.id.txtunfriend);
+
+        txtunfriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unfriendMethod();
+            }
+        });
+        txtblock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Blockuser();
+            }
+        });
+        txtcancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogmore.dismiss();
+            }
+        });
+        txtreport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogReport.show();
+                dialogmore.dismiss();
+            }
+        });
+
+
         imgCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,12 +228,15 @@ public class FragmentUserInformation extends Fragment {
             Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
         }
 
+        pageIndicator = getArguments().getString("Page");
+
         rlChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString("USER_ID", getArguments().getString("USER_ID"));
                 bundle.putString("Page", "FragmentUserInformation");
+                // bundle.putString("Page", pageIndicator);
                 bundle.putString("FriendImg", imgSender);
 
                 fragmentTransaction = fragmentManager.beginTransaction();
@@ -214,7 +259,8 @@ public class FragmentUserInformation extends Fragment {
         rlReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogReport.show();
+
+                dialogmore.show();
             }
         });
 
@@ -229,14 +275,17 @@ public class FragmentUserInformation extends Fragment {
 
         txtPageTitle.setText("Details");
 
+
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (getArguments().getString("Page").equals("FragmentInbox")) {
-//                    fragmentTransaction = fragmentManager.beginTransaction();
-//                    FragmentInbox fragmentInbox = new FragmentInbox();
-//                    fragmentTransaction.replace(R.id.fragment_container, fragmentInbox);
-//                    fragmentTransaction.commit();
+                try {
+                    if (getArguments().getString("Page").equals("Chatroom")) {
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentChatRoom fragmentInbox = new FragmentChatRoom();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentInbox);
+                        fragmentTransaction.commit();
+                    }
 //                } else if (getArguments().getString("Page").equals("FragmentAiCafeFriends")) {
 //                    fragmentTransaction = fragmentManager.beginTransaction();
 //                    FragmentAiCafeFriends fragmentAiCafeFriends = new FragmentAiCafeFriends();
@@ -247,16 +296,104 @@ public class FragmentUserInformation extends Fragment {
 //                    FragmentAllFriends fragmentAllFriends = new FragmentAllFriends();
 //                    fragmentTransaction.replace(R.id.fragment_container, fragmentAllFriends);
 //                    fragmentTransaction.commit();
+                }
+//                else {
+                catch (Exception e) {
+                    fragmentTransaction = fragmentManager.beginTransaction();
+                    FragmentProfile fragmentProfile = new FragmentProfile();
+                    fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
+                    fragmentTransaction.commit();
+                }
 //                }
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentProfile fragmentProfile = new FragmentProfile();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
-                fragmentTransaction.commit();
             }
         });
 
         return view;
     }
+
+    private void unfriendMethod() {
+        final String sendID = AppData.loginDataType.getId();
+        final String RecvID = getArguments().getString("USER_ID");
+        final String Url = "http://www.esolz.co.in/lab9/aiCafe/iosapp/friend_request_reject.php";
+
+        StringRequest sr = new StringRequest(Request.Method.POST, Url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String stringResponse) {
+                        Toast.makeText(getActivity(), stringResponse, Toast.LENGTH_LONG).show();
+                        dialogmore.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Output : ", "Error: " + error.getMessage());
+                Toast.makeText(getActivity(),
+                        "Server not responding...!", Toast.LENGTH_LONG)
+                        .show();
+                // pBAR.setVisibility(View.GONE);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("send_id", sendID);
+                params.put("rec_id", RecvID);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+
+        AppController.getInstance().addToRequestQueue(sr);
+
+    }
+
+    private void Blockuser() {
+        String userid = getArguments().getString("USER_ID");
+
+        String urlJsonObj = "http://www.esolz.co.in/lab9/aiCafe/iosapp/block_user.php?id=" + AppData.loginDataType.getId() +
+                "&block_id=" + userid;
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                urlJsonObj, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("dsd", response.toString());
+
+                try {
+                    String msg = response.getString("status");
+                    Log.d("USer Block", msg);
+                    Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                    dialogmore.dismiss();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("dssd", "Error: " + error.getMessage());
+
+
+            }
+        });
+
+
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+
+    }
+
 
     private void sendReport(final String URL, final String sendID, final String recID, final String reportReason) {
 
@@ -463,6 +600,7 @@ public class FragmentUserInformation extends Fragment {
                         try {
                             JSONObject response = new JSONObject(stringResponse);
                             JSONObject jsonObject = response.getJSONObject("detail");
+
                             Picasso.with(getActivity()).load("http://www.esolz.co.in/lab9/aiCafe/" + jsonObject.getString("photo_thumb"))
                                     .transform(new CircleTransform()).into(imgProfile);
                             txtProfileName.setText(jsonObject.getString("name"));
@@ -475,6 +613,8 @@ public class FragmentUserInformation extends Fragment {
                             txtStatus.setText(jsonObject.getString("business"));
                             txtProfileAbout.setText(jsonObject.getString("about"));
 
+                            frndstatus = response.getString("friend").trim();
+                            Toast.makeText(getActivity(), frndstatus, Toast.LENGTH_SHORT).show();
                             imgSender = jsonObject.getString("photo_thumb");
 
                             prgUserInformation.setVisibility(View.GONE);

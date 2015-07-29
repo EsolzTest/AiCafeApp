@@ -429,25 +429,32 @@ public class ActivitySignUp extends AppCompatActivity {
                     s = s.append(sResponse);
                 }
                 JSONObject jOBJ = new JSONObject(s.toString());
-                JSONObject jsonObject = jOBJ.getJSONObject("details");
-                registrationDataType = new RegistrationDataType(
-                        jsonObject.getString("id"),
-                        jsonObject.getString("name"),
-                        jsonObject.getString("sex"),
-                        jsonObject.getString("email"),
-                        jsonObject.getString("about"),
-                        jsonObject.getString("business"),
-                        jsonObject.getString("dob"),
-                        jsonObject.getString("photo"),
-                        jsonObject.getString("photo_thumb"),
-                        jsonObject.getString("registerDate"),
-                        jsonObject.getString("facebookid"),
-                        jsonObject.getString("last_sync"),
-                        jsonObject.getString("fb_pic_url"),
-                        jsonObject.getString("status"),
-                        jsonObject.getString("visible")
-                );
 
+                if(jOBJ.getString("status").equals("success")) {
+                    JSONObject jsonObject = jOBJ.getJSONObject("details");
+                    registrationDataType = new RegistrationDataType(
+                            jsonObject.getString("id"),
+                            jsonObject.getString("name"),
+                            jsonObject.getString("sex"),
+                            jsonObject.getString("email"),
+                            jsonObject.getString("about"),
+                            jsonObject.getString("business"),
+                            jsonObject.getString("dob"),
+                            jsonObject.getString("photo"),
+                            jsonObject.getString("photo_thumb"),
+                            jsonObject.getString("registerDate"),
+                            jsonObject.getString("facebookid"),
+                            jsonObject.getString("last_sync"),
+                            jsonObject.getString("fb_pic_url"),
+                            jsonObject.getString("status"),
+                            jsonObject.getString("visible")
+                    );
+                } else {
+                    Toast.makeText(getApplicationContext(), "Already registered.", Toast.LENGTH_SHORT).show();
+                }
+
+
+                Log.d("Registration URL: ", registrationURL);
                 Log.d("Registration Response: ", s.toString());
             } catch (Exception ex) {
                 Log.e("Debug", "error: " + ex.getMessage(), ex);

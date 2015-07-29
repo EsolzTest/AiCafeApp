@@ -210,16 +210,16 @@
                     <ImageView
                         android:layout_width="33dp"
                         android:layout_height="28dp"
+                        android:layout_marginLeft="10dp"
                         android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
                         android:background="@drawable/chat1"
                         android:clickable="false"/>
 
                     <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
                         android:clickable="false"
                         android:text="Chat"
                         android:textColor="#FFFFFF"
@@ -236,6 +236,7 @@
                     android:padding="6dp">
 
                     <ImageView
+                        android:id="@+id/addimg"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:layout_alignParentTop="true"
@@ -264,22 +265,24 @@
                     android:padding="6dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="28dp"
+                        android:layout_width="10dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
                         android:layout_centerHorizontal="true"
-                        android:background="@drawable/report1"
+                        android:background="@drawable/more"
                         android:clickable="false"/>
 
-                    <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:clickable="false"
-                        android:text="Report"
-                        android:textColor="#FFFFFF"
-                        android:textSize="15sp"/>
+                    <!--<com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentBottom="true"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:clickable="false"-->
+                    <!--android:text="More"-->
+                    <!--android:textColor="#FFFFFF"-->
+                    <!--android:textSize="15sp"/>-->
 
                 </RelativeLayout>
 

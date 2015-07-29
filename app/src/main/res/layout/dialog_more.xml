@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#00FFFFFF"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/roundcorner"
+
+        android:layout_height="wrap_content">
+    <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="Report, Unfriend or Block Ai-Cafe User"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FF8000"/>
+        <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Block"
+            android:gravity="center"
+            android:textColor="#EE5A44"
+            android:textSize="20sp"
+            android:id="@+id/txtblock" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FF8000"/>
+        <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Unfriend"
+            android:gravity="center"
+            android:textColor="#0F85FB"
+            android:textSize="20sp"
+            android:id="@+id/txtunfriend" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FF8000"/>
+        <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Report"
+            android:gravity="center"
+            android:textColor="#0F85FB"
+            android:textSize="20sp"
+            android:id="@+id/txtreport" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#00FFFFFF"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/roundcorner"
+        android:layout_height="wrap_content">
+        <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Cancel"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#0F85FB"
+            android:textSize="20sp"
+            android:id="@+id/txtcancel" />
+    </LinearLayout>
+</LinearLayout>

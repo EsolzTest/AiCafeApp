@@ -3,10 +3,9 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-
     defaultConfig {
         applicationId "com.esolz.aicafeapp"
-        minSdkVersion 19
+        minSdkVersion 18
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -17,11 +16,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/NOTICE'
+    }
+    productFlavors {
     }
 }
 
@@ -36,4 +36,5 @@ dependencies {
     compile files('libs/httpcore-4.4.1.jar')
     compile files('libs/httpmime-4.3.6.jar')
     compile 'com.google.android.gms:play-services:7.5.0'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
 }
