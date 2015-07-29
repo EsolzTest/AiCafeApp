@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -279,14 +280,14 @@ public class FragmentSingleChat extends Fragment {
                 if (cd.isConnectingToInternet()) {
                     try {
 
-                        String etReplace = etChatSend.getText().toString().trim()/*.replace("/", "//")*/;
+                        String etReplace = etChatSend.getText().append("\ud83d\ude01").toString();/*.trim()*//*.replace("/", "//")*/;
 
                         Log.d("!!! Replace Et ", etReplace);
 
 //                        sendMessage("http://www.esolz.co.in/lab9/aiCafe/iosapp/sendSingleUser.php",
 //                                AppData.loginDataType.getId(),
-//                                getArguments().getString("USER_ID"), etReplace
-//                                /*URLEncoder.encode(etChatSend.getText().toString().trim(), "UTF-8")*/,
+//                                getArguments().getString("USER_ID"),
+//                                /*URLEncoder.encode */(etChatSend.getText().toString().trim())/*, "UTF-8")*/,
 //                                "m",
 //                                "",
 //                                "O");
@@ -435,7 +436,7 @@ public class FragmentSingleChat extends Fragment {
 
 //                Log.d("M send_id", sendID);
 //                Log.d("M rec_id", recID);
-//                Log.d("M message", message);
+               Log.d("M message", message);
 
                 return params;
             }
