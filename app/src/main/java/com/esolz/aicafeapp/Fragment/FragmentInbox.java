@@ -71,6 +71,9 @@ public class FragmentInbox extends Fragment {
 
     ConnectionDetector cd;
 
+    final int CHUNK_SIZE = 10;
+    int totalResponseValue = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -120,7 +123,10 @@ public class FragmentInbox extends Fragment {
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentProfile fragmentProfile = new FragmentProfile();
                 fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
+                int count = fragmentManager.getBackStackEntryCount();
+                fragmentTransaction.addToBackStack(String.valueOf(count));
                 fragmentTransaction.commit();
+
             }
         });
 
@@ -138,6 +144,8 @@ public class FragmentInbox extends Fragment {
                         Log.d("Response ", stringResponse);
                         try {
                             JSONObject response = new JSONObject(stringResponse);
+                            totalResponseValue = response.getInt("total");
+
                             if (response.getString("auth").equals("success")) {
                                 JSONArray jsonArray = response.getJSONArray("details");
                                 friendListDataTypeArrayList = new ArrayList<FriendListDataType>();
@@ -163,7 +171,12 @@ public class FragmentInbox extends Fragment {
                                             jsonObject.getString("last_chat")
                                     );
                                     friendListDataTypeArrayList.add(friendListDataType);
-                                    InboxAdapter inboxAdapter = new InboxAdapter(getActivity(), 0, 0, friendListDataTypeArrayList);
+                                    InboxAdapter inboxAdapter = new InboxAdapter(getActivity(),
+                                            0,
+                                            0,
+                                            friendListDataTypeArrayList,
+                                            pbarInbox,
+                                            listInbox);
                                     listInbox.setAdapter(inboxAdapter);
                                 }
                             } else {

@@ -142,6 +142,7 @@
                 android:layout_toEndOf="@+id/imgstsend"/>
         </RelativeLayout>
 
+
         <RelativeLayout
             android:id="@+id/rl_receiver_msg"
             android:layout_width="match_parent"
@@ -149,19 +150,36 @@
             android:visibility="visible">
 
             <LinearLayout
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:layout_alignBottom="@+id/newchatbucket"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/img_bg_ring"
+                android:gravity="center"
+                android:padding="2dp">
+
+                <ImageView
+                    android:id="@+id/img_receiver"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/placeholder"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/newchatbucket"
                 android:layout_width="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="95dp"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="86dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/ll_receiver_chat_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:alpha=".80"
                     android:background="@drawable/recchat"
-                    android:alpha=".70"
                     android:orientation="vertical"
                     android:padding="12dp">
 
@@ -212,31 +230,16 @@
 
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="3dp"
-                    android:background="@drawable/chat_angle_white"/>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="76dp"
-                android:layout_height="76dp"
-                android:layout_alignBottom="@+id/newchatbucket"
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/img_bg_ring"
-                android:gravity="center"
-                android:padding="2dp">
-
-                <ImageView
-                    android:id="@+id/img_receiver"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/placeholder"
-                    />
-            </LinearLayout>
+                android:layout_marginRight="57dp"
+                android:background="@drawable/chat_angle_white"/>
 
 
         </RelativeLayout>
@@ -268,7 +271,7 @@
                 <ImageView
                     android:id="@+id/img_sticker_receive"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"/>
             </LinearLayout>
         </RelativeLayout>
 

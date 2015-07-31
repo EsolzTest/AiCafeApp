@@ -128,6 +128,8 @@ public class UserListIngAdapter extends ArrayAdapter<UserListingDataType> {
                 FragmentSingleChat fragmentSingleChat = new FragmentSingleChat();
                 fragmentSingleChat.setArguments(bundle);
                 fragmentTransaction.replace(R.id.fragment_container, fragmentSingleChat);
+                int count = fragmentManager.getBackStackEntryCount();
+                fragmentTransaction.addToBackStack(String.valueOf(count));
                 fragmentTransaction.commit();
             }
         });
@@ -157,9 +159,10 @@ public class UserListIngAdapter extends ArrayAdapter<UserListingDataType> {
                 FragmentUserInformation fragmentUserInformation = new FragmentUserInformation();
                 fragmentUserInformation.setArguments(bundle);
                 fragmentTransaction.replace(R.id.fragment_container, fragmentUserInformation);
+                int count = fragmentManager.getBackStackEntryCount();
+                fragmentTransaction.addToBackStack(String.valueOf(count));
                 fragmentTransaction.commit();
 
-                Toast.makeText(context, userListingDataTypeArrayList.get(position).getId(), Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -1,6 +1,7 @@
 package com.esolz.aicafeapp.Fragment;
 
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +53,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -77,7 +80,7 @@ public class FragmentChatRoom extends Fragment {
     ArrayList<UserListingDataType> userListingDataTypeArrayList;
     LayoutInflater inflater;
     ProgressBar toploader;
-    final int CHUNK_SIZE = 200;
+    final int CHUNK_SIZE = 10;
     int totalResponseValue = 0;
     ArrayList<ChatViewDataType> chatViewDataTypeArrayList;
     SingleChatAdapter singleChatAdapter;
@@ -98,7 +101,9 @@ public class FragmentChatRoom extends Fragment {
     ChatRecyclerAdapter adapter;
 
     ArrayList<String> arrSenderId;
+    String getAllSenderIdId = "";
 
+    GroupChatAdapter groupChatAdapter;
 
     @Nullable
     @Override
@@ -145,16 +150,26 @@ public class FragmentChatRoom extends Fragment {
         rv.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), rv, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+//
+//                String name = userListingDataTypeArrayList.get(position).getId();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("USER_ID", name);
+//
+//                fragmentTransaction = fragmentManager.beginTransaction();
+//                FragmentUserInformation fragmentUserInformation = new FragmentUserInformation();
+//                fragmentUserInformation.setArguments(bundle);
+//                fragmentTransaction.replace(R.id.fragment_container, fragmentUserInformation);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
                 String name = userListingDataTypeArrayList.get(position).getId();
                 Bundle bundle = new Bundle();
                 bundle.putString("USER_ID", name);
-
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentUserInformation fragmentUserInformation = new FragmentUserInformation();
                 fragmentUserInformation.setArguments(bundle);
                 fragmentTransaction.replace(R.id.fragment_container, fragmentUserInformation);
-                fragmentTransaction.addToBackStack(null);
+                int count = fragmentManager.getBackStackEntryCount();
+                fragmentTransaction.addToBackStack(String.valueOf(count));
                 fragmentTransaction.commit();
 
             }
@@ -202,6 +217,12 @@ public class FragmentChatRoom extends Fragment {
             }
         });
 
+        if (cd.isConnectingToInternet()) {
+            makeJsonObjectRequest("http://203.196.159.37/lab9/aiCafe/iosapp/user_listing.php", AppData.loginDataType.getId());
+        } else {
+            Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
+        }
+
         gridView = (GridView) view.findViewById(R.id.grid);
 
         AppData.stikersHolder = new ArrayList<>();
@@ -223,6 +244,24 @@ public class FragmentChatRoom extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity(), "" + getStikerNo(position), Toast.LENGTH_SHORT).show();
                 if (cd.isConnectingToInternet()) {
+                    horizontalScrollView.setVisibility(View.GONE);
+                    try {
+                        if (AppController.isSoundON().equals("ON")) {
+                            MediaPlayer mp = MediaPlayer.create(getActivity(), R.raw.beep4);
+                            mp.start();
+                        } else {
+                        }
+
+                        sendMessage("http://www.esolz.co.in/lab9/aiCafe/iosapp/sendGroupUser.php",
+                                AppData.loginDataType.getId(),
+                                getAllSenderIdId,
+                                "test",
+                                "s",
+                                getStikerNo(position),
+                                "G");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
@@ -242,21 +281,29 @@ public class FragmentChatRoom extends Fragment {
                 if (cd.isConnectingToInternet()) {
                     try {
 
+
+                        if (AppController.isSoundON().equals("ON")) {
+                            MediaPlayer mp = MediaPlayer.create(getActivity(), R.raw.beep4);
+                            mp.start();
+                        } else {
+                        }
+
+                        sendMessage("http://www.esolz.co.in/lab9/aiCafe/iosapp/sendGroupUser.php",
+                                AppData.loginDataType.getId(),
+                                getAllSenderIdId,
+                                URLEncoder.encode(etChatSend.getText().toString().trim(), "UTF-8"),
+                                "m",
+                                "",
+                                "G");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
-
+                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         // --------------------end ----------
-
-        if (cd.isConnectingToInternet()) {
-            makeJsonObjectRequest("http://203.196.159.37/lab9/aiCafe/iosapp/user_listing.php", AppData.loginDataType.getId());
-        } else {
-            Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
-        }
 
 
         return view;
@@ -282,9 +329,86 @@ public class FragmentChatRoom extends Fragment {
         }
     }
 
+    private void sendMessage(final String URL, final String sendID, final String recID,
+                             final String message, final String type, final String stikername, final String chatType) {
+        progressPanelForSent.setVisibility(View.VISIBLE);
+        StringRequest sr = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String stringResponse) {
+                        Log.i("CHAT RES @@@", stringResponse);
+                        Log.i("CHAT send", URL);
+                        try {
+                            JSONObject response = new JSONObject(stringResponse);
+                            if (response.getString("status").equals("success")) {
+                                JSONObject jInnerObj = response.getJSONObject("details");
+                                ChatViewDataType chatViewDataType = new ChatViewDataType(
+                                        jInnerObj.getString("" + "chat_id"),
+                                        jInnerObj.getString("" + "send_from"),
+                                        jInnerObj.getString("send_to"),
+                                        jInnerObj.getString("message"),
+                                        jInnerObj.getString("type"),
+                                        jInnerObj.getString("stickername"),
+                                        jInnerObj.getString("chat_time"),
+                                        jInnerObj.getString("chat_date"),
+                                        jInnerObj.getString("status"),
+                                        jInnerObj.getString("file_link"),
+                                        jInnerObj.getString("file_available"),
+                                        jInnerObj.getString("name"),
+                                        jInnerObj.getString("photo"),
+                                        jInnerObj.getString("photo_thumb")
+                                );
+                                groupChatAdapter.addFromReceiver(chatViewDataType);
+                                progressPanelForSent.setVisibility(View.GONE);
+                                etChatSend.setText("");
+                                Toast.makeText(getActivity(), "Message send.", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getActivity(), "Message not send.", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.i("CHAT RES SAKU", e.toString());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Output : ", "Error: " + error.getMessage());
+                Toast.makeText(getActivity(), "Server not responding...!", Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("send_id", sendID);
+                params.put("rec_id", recID);
+                params.put("message", message);
+                params.put("type", type);
+                params.put("stickername", stikername);
+                params.put("chat_type", chatType);
+
+                Log.d("M send_id", sendID);
+                Log.d("M rec_id", recID);
+                Log.d("M message", message);
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(sr);
+    }
+
 
     private void makeJsonObjectRequest(final String URL, final String ID) {
 
+        getAllSenderIdId = "";
 
         StringRequest sr = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
@@ -341,6 +465,9 @@ public class FragmentChatRoom extends Fragment {
                                 AppData.loginDataType.getId()
                         );
 
+                        getAllSenderIdId = TextUtils.join(",", arrSenderId);
+                        Log.d("@@ String Sender Id @@", getAllSenderIdId);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -372,7 +499,6 @@ public class FragmentChatRoom extends Fragment {
 
     private void getAllChatDetails(final String URL, final String sendID) {
 
-
         Log.d("Single chat url", URL);
 
         StringRequest sr = new StringRequest(Request.Method.POST, URL,
@@ -380,7 +506,6 @@ public class FragmentChatRoom extends Fragment {
                     @Override
                     public void onResponse(String stringResponse) {
                         Log.d("Response ", stringResponse);
-
 
                         try {
                             JSONObject response = new JSONObject(stringResponse);
@@ -411,7 +536,7 @@ public class FragmentChatRoom extends Fragment {
                                         //Collections.reverse(chatViewDataTypeArrayList);
                                     }
                                     Collections.reverse(chatViewDataTypeArrayList);
-                                    GroupChatAdapter groupChatAdapter = new GroupChatAdapter(getActivity(),
+                                    groupChatAdapter = new GroupChatAdapter(getActivity(),
                                             0, 0,
                                             chatViewDataTypeArrayList,
                                             totalResponseValue,

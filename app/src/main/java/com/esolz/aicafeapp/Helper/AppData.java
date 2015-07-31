@@ -1,7 +1,9 @@
 package com.esolz.aicafeapp.Helper;
 
 import com.esolz.aicafeapp.Datatype.LoginDataType;
+import com.esolz.aicafeapp.Datatype.SettingsDataType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,4 +20,6 @@ public class AppData {
     public static String appRegId = "";
 
     public static boolean isChatAlive = false;
+
+    public static ArrayList<SettingsDataType> settingsDataTypeArrayList;
 }

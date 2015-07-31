@@ -35,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -151,7 +152,12 @@ public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
 
                 holder.meChatHeaderLeft.setText(dtaFunal.getName());
                 holder.meChatHeaderRight.setText(dtaFunal.getChat_date());
-                holder.meChatContent.setText(/*Html.fromHtml(*/dtaFunal.getMessage()/*)*/);
+                try {
+                    holder.meChatContent.setText(/*Html.fromHtml(*/URLDecoder.decode(dtaFunal.getMessage(), "UTF-8")/*)*/);
+
+                } catch (Exception e) {
+
+                }
 
 //                Picasso.with(context).load("http://www.esolz.co.in/lab9/aiCafe/" + AppData.loginDataType.getPhoto_thumb()).fit().centerCrop()
 //                        .transform(new CircleTransform()).into(holder.imgReceiver);
@@ -193,14 +199,20 @@ public class SingleChatAdapter extends ArrayAdapter<ChatViewDataType> {
 
                 holder.youChatHeaderLeft.setText(dtaFunal.getName());
                 holder.youChatHeaderRight.setText(dtaFunal.getChat_date());
-                holder.youChatContent.setText(/*Html.fromHtml(*/dtaFunal.getMessage()/*)*/);
+                //holder.youChatContent.setText(/*Html.fromHtml(*/dtaFunal.getMessage()/*)*/);
+                try {
+                    holder.youChatContent.setText(/*Html.fromHtml(*/URLDecoder.decode(dtaFunal.getMessage(), "UTF-8")/*)*/);
+
+                } catch (Exception e) {
+
+                }
             }
         }
 
         if (totalResponseValue > getCount()) {
             if (position == (getCount() - 1)) {
                 if (isDataRetrving == false) {
-           //======Lazy loading start.....
+                    //======Lazy loading start.....
                     getAllChatDetails(AppData.loginDataType.getId(), idRec,
                             "" + getCount(), "");
                     //   Toast.makeText(context, "here..", Toast.LENGTH_SHORT).show();

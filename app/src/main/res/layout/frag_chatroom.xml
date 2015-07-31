@@ -5,44 +5,53 @@
                 android:background="@drawable/mainbg"
                 android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:gravity="center"
+    <LinearLayout
+        android:id="@+id/rec_container"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:elevation="10dp"
-        android:background="#60ffffff"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#60ffffff"
+            android:elevation="10dp"
+            android:gravity="center"/>
+    </LinearLayout>
 
 
     <!--<HorizontalScrollView-->
-        <!--android:id="@+id/horizontalScrollView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="90dp"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:background="#60ffffff"-->
-        <!--android:elevation="10dp"-->
-        <!--android:fillViewport="false">-->
+    <!--android:id="@+id/horizontalScrollView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="90dp"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:background="#60ffffff"-->
+    <!--android:elevation="10dp"-->
+    <!--android:fillViewport="false">-->
 
 
-        <!--<LinearLayout-->
-            <!--android:id="@+id/alluserchatroom"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:animateLayoutChanges="true"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:paddingLeft="10dp"-->
-            <!--android:paddingRight="10dp">-->
+    <!--<LinearLayout-->
+    <!--android:id="@+id/alluserchatroom"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:animateLayoutChanges="true"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:paddingLeft="10dp"-->
+    <!--android:paddingRight="10dp">-->
 
-        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
 
     <!--</HorizontalScrollView>-->
 
     <RelativeLayout
+        android:id="@+id/center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_bottom"
-        android:layout_below="@+id/recycler">
+        android:layout_below="@+id/rec_container">
 
 
         <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
@@ -139,7 +148,7 @@
                     android:layout_height="65dp"
                     android:background="#00FFFFFF"
                     android:gravity="left|top"
-                    android:inputType="textMultiLine"
+                    android:inputType="textMultiLine|textShortMessage"
                     android:padding="4dp"
                     android:scrollbars="none"
                     android:textColor="#250F00"

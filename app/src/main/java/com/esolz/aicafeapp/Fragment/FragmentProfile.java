@@ -161,6 +161,8 @@ public class FragmentProfile extends Fragment {
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentAiCafeFriends fragmentAiCafeFriends = new FragmentAiCafeFriends();
                 fragmentTransaction.replace(R.id.fragment_container, fragmentAiCafeFriends);
+                int count = fragmentManager.getBackStackEntryCount();
+                fragmentTransaction.addToBackStack(String.valueOf(count));
                 fragmentTransaction.commit();
             }
         });
@@ -171,7 +173,10 @@ public class FragmentProfile extends Fragment {
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentInbox fragmentInbox = new FragmentInbox();
                 fragmentTransaction.replace(R.id.fragment_container, fragmentInbox);
+                int count = fragmentManager.getBackStackEntryCount();
+                fragmentTransaction.addToBackStack(String.valueOf(count));
                 fragmentTransaction.commit();
+
             }
         });
 

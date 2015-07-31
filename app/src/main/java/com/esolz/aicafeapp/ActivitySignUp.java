@@ -453,7 +453,6 @@ public class ActivitySignUp extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Already registered.", Toast.LENGTH_SHORT).show();
                 }
 
-
                 Log.d("Registration URL: ", registrationURL);
                 Log.d("Registration Response: ", s.toString());
             } catch (Exception ex) {

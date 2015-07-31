@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:background="#00FFFFFF"
-    android:orientation="vertical"
-    android:layout_height="wrap_content">
+              android:layout_width="match_parent"
+              android:background="#00FFFFFF"
+              android:orientation="vertical"
+              android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:background="@drawable/roundcorner"
 
         android:layout_height="wrap_content">
-    <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="Report, Unfriend or Block Ai-Cafe User"/>
+        <com.esolz.aicafeapp.Customviews.OpenSansRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Report, Unfriend or Block Ai-Cafe User"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -27,10 +27,13 @@
             android:textColor="#EE5A44"
             android:textSize="20sp"
             android:id="@+id/txtblock" />
-        <View
+        <LinearLayout
+            android:id="@+id/vvv"
+            android:visibility="gone"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#FF8000"/>
+            android:background="#FF8000"></LinearLayout>
         <com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -38,6 +41,7 @@
             android:gravity="center"
             android:textColor="#0F85FB"
             android:textSize="20sp"
+            android:visibility="gone"
             android:id="@+id/txtunfriend" />
         <View
             android:layout_width="match_parent"

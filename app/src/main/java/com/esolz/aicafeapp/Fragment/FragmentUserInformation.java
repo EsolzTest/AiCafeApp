@@ -66,11 +66,11 @@ import java.util.Map;
 public class FragmentUserInformation extends Fragment {
 
     View view;
-    LinearLayout llPipeContainer, slidingNow, llBack;
+    LinearLayout llPipeContainer, slidingNow, llBack,vvv;
     RelativeLayout rlMSGContainer;
     OpenSansSemiboldTextView txtPageTitle, txtreport, txtcancel, txtblock, txtunfriend;
     OpenSansRegularTextView txtMSGCounter;
-    ImageView imgBack, imgMSG, addimg;
+    ImageView imgBack, imgMSG;
     DrawerLayout drawerLayout;
 
     FragmentManager fragmentManager;
@@ -79,7 +79,7 @@ public class FragmentUserInformation extends Fragment {
     ConnectionDetector cd;
     String frndstatus;
     ImageView imgProfile;
-    OpenSansSemiboldTextView txtProfileName;
+    OpenSansSemiboldTextView txtProfileName,txtadduser;
     OpenSansRegularTextView txtBusinessPro, txtAge, txtGender, txtStatus, txtProfileAbout;
     RelativeLayout rlChat, rlAddFriend, rlReport, mainLayout;
     ProgressBar prgUserInformation;
@@ -114,15 +114,17 @@ public class FragmentUserInformation extends Fragment {
         txtPageTitle = (OpenSansSemiboldTextView) getActivity().findViewById(R.id.txt_page_title);
         imgBack = (ImageView) getActivity().findViewById(R.id.img_back);
         llBack = (LinearLayout) getActivity().findViewById(R.id.ll_back);
+
         txtMSGCounter = (OpenSansRegularTextView) getActivity().findViewById(R.id.txt_msg_counter);
         imgMSG = (ImageView) getActivity().findViewById(R.id.img_msg);
 
-        addimg = (ImageView) getActivity().findViewById(R.id.addimg);
+
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
         imgProfile = (ImageView) view.findViewById(R.id.img_profile);
         txtProfileName = (OpenSansSemiboldTextView) view.findViewById(R.id.txt_profile_name);
+
         txtBusinessPro = (OpenSansRegularTextView) view.findViewById(R.id.txt_business_pro);
         txtAge = (OpenSansRegularTextView) view.findViewById(R.id.txt_age);
         txtGender = (OpenSansRegularTextView) view.findViewById(R.id.txt_gender);
@@ -187,17 +189,29 @@ public class FragmentUserInformation extends Fragment {
         txtcancel = (OpenSansSemiboldTextView) dialogmore.findViewById(R.id.txtcancel);
         txtblock = (OpenSansSemiboldTextView) dialogmore.findViewById(R.id.txtblock);
         txtunfriend = (OpenSansSemiboldTextView) dialogmore.findViewById(R.id.txtunfriend);
+        vvv = (LinearLayout) dialogmore.findViewById(R.id.vvv);
+
 
         txtunfriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unfriendMethod();
+                if (cd.isConnectingToInternet()) {
+                    unfriendMethod();
+                } else {
+                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         txtblock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Blockuser();
+                if (cd.isConnectingToInternet()) {
+                    Blockuser();
+                } else {
+                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         txtcancel.setOnClickListener(new View.OnClickListener() {
@@ -213,6 +227,10 @@ public class FragmentUserInformation extends Fragment {
                 dialogmore.dismiss();
             }
         });
+
+
+
+
 
 
         imgCancel.setOnClickListener(new View.OnClickListener() {
@@ -242,8 +260,12 @@ public class FragmentUserInformation extends Fragment {
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentSingleChat fragmentSingleChat = new FragmentSingleChat();
                 fragmentSingleChat.setArguments(bundle);
+
                 fragmentTransaction.replace(R.id.fragment_container, fragmentSingleChat);
+                int count = fragmentManager.getBackStackEntryCount();
+                fragmentTransaction.addToBackStack(String.valueOf(count));
                 fragmentTransaction.commit();
+                Toast.makeText(getActivity(),String.valueOf(count),Toast.LENGTH_SHORT).show();
             }
         });
         rlAddFriend.setOnClickListener(new View.OnClickListener() {
@@ -279,32 +301,8 @@ public class FragmentUserInformation extends Fragment {
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if (getArguments().getString("Page").equals("Chatroom")) {
-                        fragmentTransaction = fragmentManager.beginTransaction();
-                        FragmentChatRoom fragmentInbox = new FragmentChatRoom();
-                        fragmentTransaction.replace(R.id.fragment_container, fragmentInbox);
-                        fragmentTransaction.commit();
-                    }
-//                } else if (getArguments().getString("Page").equals("FragmentAiCafeFriends")) {
-//                    fragmentTransaction = fragmentManager.beginTransaction();
-//                    FragmentAiCafeFriends fragmentAiCafeFriends = new FragmentAiCafeFriends();
-//                    fragmentTransaction.replace(R.id.fragment_container, fragmentAiCafeFriends);
-//                    fragmentTransaction.commit();
-//                } else {
-//                    fragmentTransaction = fragmentManager.beginTransaction();
-//                    FragmentAllFriends fragmentAllFriends = new FragmentAllFriends();
-//                    fragmentTransaction.replace(R.id.fragment_container, fragmentAllFriends);
-//                    fragmentTransaction.commit();
-                }
-//                else {
-                catch (Exception e) {
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    FragmentProfile fragmentProfile = new FragmentProfile();
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
-                    fragmentTransaction.commit();
-                }
-//                }
+
+                getActivity().onBackPressed();
             }
         });
 
@@ -320,7 +318,10 @@ public class FragmentUserInformation extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String stringResponse) {
-                        Toast.makeText(getActivity(), stringResponse, Toast.LENGTH_LONG).show();
+                        if(stringResponse.equalsIgnoreCase("reject"))
+                            Toast.makeText(getActivity(), "Successfully Unfriend", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getActivity(),"Unfriend"+ stringResponse, Toast.LENGTH_LONG).show();
                         dialogmore.dismiss();
                     }
                 }, new Response.ErrorListener() {
@@ -336,8 +337,8 @@ public class FragmentUserInformation extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("send_id", sendID);
-                params.put("rec_id", RecvID);
+                params.put("send_id", RecvID);
+                params.put("rec_id", sendID);
                 return params;
             }
 
@@ -369,8 +370,11 @@ public class FragmentUserInformation extends Fragment {
 
                 try {
                     String msg = response.getString("status");
+                    if (msg.equalsIgnoreCase("success"))
+                        Toast.makeText(getActivity(), "Successfully Blocked", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                     Log.d("USer Block", msg);
-                    Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                     dialogmore.dismiss();
 
                 } catch (JSONException e) {
@@ -500,6 +504,8 @@ public class FragmentUserInformation extends Fragment {
                     @Override
                     public void onResponse(String stringResponse) {
                         Toast.makeText(getActivity(), "Send friend request successfully.", Toast.LENGTH_LONG).show();
+                        rlAddFriend.setClickable(false);
+                        rlAddFriend.setVisibility(View.INVISIBLE);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -587,7 +593,7 @@ public class FragmentUserInformation extends Fragment {
 
     }
 
-    private void makeJsonObjectRequest(final String URL, final String ID) {
+    private void makeJsonObjectRequest(final String URL, final String FRNDID) {
 
         prgUserInformation.setVisibility(View.VISIBLE);
         mainLayout.setVisibility(View.GONE);
@@ -614,7 +620,13 @@ public class FragmentUserInformation extends Fragment {
                             txtProfileAbout.setText(jsonObject.getString("about"));
 
                             frndstatus = response.getString("friend").trim();
-                            Toast.makeText(getActivity(), frndstatus, Toast.LENGTH_SHORT).show();
+                            if(frndstatus.equalsIgnoreCase("T"))
+                            {
+                                rlAddFriend.setClickable(false);
+                                rlAddFriend.setVisibility(View.INVISIBLE);
+                                txtunfriend.setVisibility(View.VISIBLE);
+                                vvv.setVisibility(View.VISIBLE);
+                            }
                             imgSender = jsonObject.getString("photo_thumb");
 
                             prgUserInformation.setVisibility(View.GONE);
@@ -637,7 +649,8 @@ public class FragmentUserInformation extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("id", ID);
+                params.put("id", FRNDID);
+                params.put("user_id", AppData.loginDataType.getId());
                 return params;
             }
 

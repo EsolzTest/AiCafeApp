@@ -1,5 +1,6 @@
 package com.esolz.aicafeapp.Fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -23,13 +23,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.esolz.aicafeapp.Adapter.FriendAdapter;
-import com.esolz.aicafeapp.Adapter.InboxAdapter;
+import com.esolz.aicafeapp.Adapter.BlockListAdapter;
 import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
 import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
-import com.esolz.aicafeapp.Datatype.FriendListDataType;
+import com.esolz.aicafeapp.Datatype.BlockListDataType;
 import com.esolz.aicafeapp.Helper.AppController;
 import com.esolz.aicafeapp.Helper.AppData;
 import com.esolz.aicafeapp.Helper.ConnectionDetector;
@@ -44,37 +42,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by ltp on 08/07/15.
+ * Created by ltp on 31/07/15.
  */
-public class FragmentAiCafeFriends extends Fragment {
+public class FragmentBlockListSettings extends Fragment {
 
     View view;
     LinearLayout llPipeContainer, slidingNow, llBack;
     RelativeLayout rlMSGContainer;
     OpenSansSemiboldTextView txtPageTitle;
-    OpenSansRegularTextView txtMSGCounter, txtError;
+    OpenSansRegularTextView txtMSGCounter;
     ImageView imgBack, imgMSG;
     DrawerLayout drawerLayout;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
-    ListView listFriend;
-    ProgressBar pbarFriend;
-
-    ArrayList<FriendListDataType> friendListDataTypeArrayList;
-    FriendListDataType friendListDataType;
-
     ConnectionDetector cd;
 
-    final int CHUNK_SIZE = 10;
+    OpenSansRegularTextView txtError;
+    ProgressBar pbarBlockList;
+    ListView listBlocklist;
 
-    int totalResponseValue = 0;
+    ArrayList<BlockListDataType> blockListDataTypeArrayList;
+    BlockListDataType blockListDataType;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_aicafefriends, container, false);
+        view = inflater.inflate(R.layout.frag_blocklistsettings, container, false);
 
         cd = new ConnectionDetector(getActivity());
 
@@ -92,13 +87,17 @@ public class FragmentAiCafeFriends extends Fragment {
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        listFriend = (ListView) view.findViewById(R.id.list_friend);
-        pbarFriend = (ProgressBar) view.findViewById(R.id.pbar_friend);
+        pbarBlockList = (ProgressBar) view.findViewById(R.id.pbar_blocklist);
+        listBlocklist = (ListView) view.findViewById(R.id.list_blocklist);
         txtError = (OpenSansRegularTextView) view.findViewById(R.id.txt_error);
+        pbarBlockList.setVisibility(View.GONE);
+        listBlocklist.setVisibility(View.GONE);
         txtError.setVisibility(View.GONE);
 
         if (cd.isConnectingToInternet()) {
-            makeJsonObjectRequest("http://www.esolz.co.in/lab9/aiCafe/iosapp/friend_list.php", AppData.loginDataType.getId());
+            getSettingsInformation(
+                    "http://www.esolz.co.in/lab9/aiCafe/iosapp/show_status.php", AppData.loginDataType.getId()
+            );
         } else {
             Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
         }
@@ -112,14 +111,14 @@ public class FragmentAiCafeFriends extends Fragment {
         imgMSG.setVisibility(View.GONE);
         txtMSGCounter.setVisibility(View.GONE);
 
-        txtPageTitle.setText("AiCafe Friends");
+        txtPageTitle.setText("Block List Setting");
 
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentProfile fragmentProfile = new FragmentProfile();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
+                FragmentSettings fragmentSettings = new FragmentSettings();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentSettings);
                 int count = fragmentManager.getBackStackEntryCount();
                 fragmentTransaction.addToBackStack(String.valueOf(count));
                 fragmentTransaction.commit();
@@ -130,79 +129,74 @@ public class FragmentAiCafeFriends extends Fragment {
         return view;
     }
 
-    private void makeJsonObjectRequest(final String URL, final String ID) {
+    public void getSettingsInformation(final String URL, final String ID) {
 
-        pbarFriend.setVisibility(View.VISIBLE);
+        pbarBlockList.setVisibility(View.VISIBLE);
+        listBlocklist.setVisibility(View.GONE);
+        txtError.setVisibility(View.GONE);
+
         StringRequest sr = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String stringResponse) {
                         Log.d("Response ", stringResponse);
+                        pbarBlockList.setVisibility(View.GONE);
+                        listBlocklist.setVisibility(View.VISIBLE);
                         try {
                             JSONObject response = new JSONObject(stringResponse);
-                            totalResponseValue = response.getInt("total");
-
-                            if (response.getString("auth").equals("success")) {
-                                JSONArray jsonArray = response.getJSONArray("details");
-                                friendListDataTypeArrayList = new ArrayList<FriendListDataType>();
+                            JSONArray jsonArray = response.getJSONArray("block_list");
+                            blockListDataTypeArrayList = new ArrayList<BlockListDataType>();
+                            if (jsonArray.length() > 0) {
                                 for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    friendListDataType = new FriendListDataType(
-                                            jsonObject.getString("id"),
-                                            jsonObject.getString("name"),
-                                            jsonObject.getString("sex"),
-                                            jsonObject.getString("email"),
+                                    JSONObject jsonObjectIn = jsonArray.getJSONObject(i);
+                                    blockListDataType = new BlockListDataType(
+                                            jsonObjectIn.getString("id"),
+                                            jsonObjectIn.getString("name"),
+                                            jsonObjectIn.getString("sex"),
+                                            jsonObjectIn.getString("email"),
                                             "",
-                                            jsonObject.getString("about"),
-                                            jsonObject.getString("business"),
-                                            jsonObject.getString("dob"),
-                                            jsonObject.getString("photo"),
-                                            jsonObject.getString("photo_thumb"),
-                                            jsonObject.getString("registerDate"),
-                                            jsonObject.getString("facebookid"),
-                                            jsonObject.getString("last_sync"),
-                                            jsonObject.getString("fb_pic_url"),
-                                            "" + jsonObject.getInt("age"),
-                                            jsonObject.getString("online"),
-                                            jsonObject.getString("last_chat")
+                                            jsonObjectIn.getString("about"),
+                                            jsonObjectIn.getString("business"),
+                                            jsonObjectIn.getString("dob"),
+                                            jsonObjectIn.getString("photo"),
+                                            jsonObjectIn.getString("photo_thumb"),
+                                            jsonObjectIn.getString("registerDate"),
+                                            jsonObjectIn.getString("facebookid"),
+                                            jsonObjectIn.getString("last_sync"),
+                                            jsonObjectIn.getString("fb_pic_url"),
+                                            "" + jsonObjectIn.getInt("age")
                                     );
-
-                                    friendListDataTypeArrayList.add(friendListDataType);
-                                    FriendAdapter friendAdapter = new FriendAdapter(
-                                            getActivity(),
-                                            0,
-                                            0,
-                                            friendListDataTypeArrayList,
-                                            totalResponseValue,
-                                            pbarFriend,
-                                            listFriend);
-                                    listFriend.setAdapter(friendAdapter);
+                                    blockListDataTypeArrayList.add(blockListDataType);
                                 }
+                                BlockListAdapter blockListAdapter = new BlockListAdapter(
+                                        getActivity(), 0, 0,
+                                        blockListDataTypeArrayList
+                                );
+                                listBlocklist.setAdapter(blockListAdapter);
                             } else {
+                                pbarBlockList.setVisibility(View.GONE);
+                                listBlocklist.setVisibility(View.GONE);
                                 txtError.setVisibility(View.VISIBLE);
                             }
                         } catch (JSONException e) {
                             Log.d("JSONException", e.toString());
                             Toast.makeText(getActivity(), "Server not responding...", Toast.LENGTH_SHORT).show();
                         }
-                        pbarFriend.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pbarBlockList.setVisibility(View.GONE);
+                listBlocklist.setVisibility(View.GONE);
+                txtError.setVisibility(View.VISIBLE);
                 VolleyLog.d("Output : ", "Error: " + error.getMessage());
-                Toast.makeText(getActivity(),
-                        "Server not responding...!", Toast.LENGTH_LONG)
-                        .show();
-                // pBAR.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), "Server not responding...!", Toast.LENGTH_LONG).show();
             }
         }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("id", ID);
-                params.put("start", "0");
-                params.put("records", "" + CHUNK_SIZE);
                 return params;
             }
 

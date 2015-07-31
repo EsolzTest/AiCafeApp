@@ -32,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +40,7 @@ import java.util.Map;
 /**
  * Created by ltp on 28/07/15.
  */
-public class GroupChatAdapter  extends ArrayAdapter<ChatViewDataType> {
+public class GroupChatAdapter extends ArrayAdapter<ChatViewDataType> {
 
     ViewHolder holder;
     Context context;
@@ -57,9 +58,9 @@ public class GroupChatAdapter  extends ArrayAdapter<ChatViewDataType> {
     int lazyCount = 0;
 
     public GroupChatAdapter(Context context, int resource, int textViewResourceId,
-                             ArrayList<ChatViewDataType> chatViewDataTypeArrayList,
-                             int totalResponseValue,
-                             String idRec, ProgressBar toploader, ListView lView) {
+                            ArrayList<ChatViewDataType> chatViewDataTypeArrayList,
+                            int totalResponseValue,
+                            String idRec, ProgressBar toploader, ListView lView) {
 
         super(context, resource, textViewResourceId, chatViewDataTypeArrayList);
 
@@ -147,7 +148,14 @@ public class GroupChatAdapter  extends ArrayAdapter<ChatViewDataType> {
 
                 holder.meChatHeaderLeft.setText(dtaFunal.getName());
                 holder.meChatHeaderRight.setText(dtaFunal.getChat_date());
-                holder.meChatContent.setText(/*Html.fromHtml(*/dtaFunal.getMessage()/*)*/);
+                //holder.meChatContent.setText(dtaFunal.getMessage());
+
+                try {
+                    holder.meChatContent.setText(URLDecoder.decode(dtaFunal.getMessage(), "UTF-8"));
+
+                } catch (Exception e) {
+
+                }
 
 //                Picasso.with(context).load("http://www.esolz.co.in/lab9/aiCafe/" + AppData.loginDataType.getPhoto_thumb()).fit().centerCrop()
 //                        .transform(new CircleTransform()).into(holder.imgReceiver);
@@ -189,21 +197,27 @@ public class GroupChatAdapter  extends ArrayAdapter<ChatViewDataType> {
 
                 holder.youChatHeaderLeft.setText(dtaFunal.getName());
                 holder.youChatHeaderRight.setText(dtaFunal.getChat_date());
-                holder.youChatContent.setText(/*Html.fromHtml(*/dtaFunal.getMessage()/*)*/);
+                holder.youChatContent.setText(dtaFunal.getMessage());
+
+                try {
+                    holder.youChatContent.setText(URLDecoder.decode(dtaFunal.getMessage(), "UTF-8"));
+                } catch (Exception e) {
+
+                }
             }
         }
 
-//        if (totalResponseValue > getCount()) {
-//            if (position == (getCount() - 1)) {
-//                if (isDataRetrving == false) {
-//                    //======Lazy loading start.....
-//                    getAllChatDetails(AppData.loginDataType.getId(), idRec,
-//                            "" + getCount(), "");
-//                    //   Toast.makeText(context, "here..", Toast.LENGTH_SHORT).show();
-//                    //Log.i("CHAT", "Fire here..");
-//                }
-//            }
-//        }
+        if (totalResponseValue > getCount()) {
+            if (position == (getCount() - 1)) {
+                if (isDataRetrving == false) {
+                    //======Lazy loading start.....
+                    getAllChatDetails(AppData.loginDataType.getId(), idRec,
+                            "" + getCount(), "");
+                    //   Toast.makeText(context, "here..", Toast.LENGTH_SHORT).show();
+                    //Log.i("CHAT", "Fire here..");
+                }
+            }
+        }
 
 
         return convertView;
@@ -212,7 +226,7 @@ public class GroupChatAdapter  extends ArrayAdapter<ChatViewDataType> {
     //============LazyLoading
     private void getAllChatDetails(final String sendID, final String recID, final String start, final String records) {
         toploader.setVisibility(View.VISIBLE);
-        final String URL = "http://203.196.159.37//lab9/aiCafe/iosapp/chat_view.php";
+        final String URL = "http://www.esolz.co.in//lab9/aiCafe/iosapp/group_chat_view.php";
         Log.d("Single chat url", URL);
         isDataRetrving = true;
         // holder.progressBar.setVisibility(View.GONE);
@@ -299,7 +313,7 @@ public class GroupChatAdapter  extends ArrayAdapter<ChatViewDataType> {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("send_id", sendID);
-                params.put("rec_id", recID);
+                // params.put("rec_id", recID);
                 params.put("start", start);
                 params.put("records", "" + CHUNK_SIZE);
                 return params;

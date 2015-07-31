@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -47,6 +48,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -236,12 +238,15 @@ public class FragmentSingleChat extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(getActivity(), "" + getStikerNo(position), Toast.LENGTH_SHORT).show();
                 if (cd.isConnectingToInternet()) {
+                    horizontalScrollView.setVisibility(View.GONE);
 
-//                    chatViewDataType.setType("s");
-//                    chatViewDataType.setStickername(getStikerNo(position));
-//                    singleChatAdapter.add(chatViewDataType);
 
-                    sendStiker(
+                    if (AppController.isSoundON().equals("ON")) {
+                        MediaPlayer mp = MediaPlayer.create(getActivity(), R.raw.beep4);
+                        mp.start();
+                    } else {
+                    }
+                    sendMessage(
                             " http://www.esolz.co.in/lab9/aiCafe/iosapp/sendSingleUser.php",
                             AppData.loginDataType.getId(),
                             getArguments().getString("USER_ID"),
@@ -262,7 +267,7 @@ public class FragmentSingleChat extends Fragment {
                     AppData.loginDataType.getId(),
                     getArguments().getString("USER_ID"),
                     "0",
-                    "150");
+                    "" + CHUNK_SIZE);
         } else {
             Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
         }
@@ -280,22 +285,26 @@ public class FragmentSingleChat extends Fragment {
                 if (cd.isConnectingToInternet()) {
                     try {
 
-                        String etReplace = etChatSend.getText().append("\ud83d\ude01").toString();/*.trim()*//*.replace("/", "//")*/;
-
-                        Log.d("!!! Replace Et ", etReplace);
-
-//                        sendMessage("http://www.esolz.co.in/lab9/aiCafe/iosapp/sendSingleUser.php",
-//                                AppData.loginDataType.getId(),
-//                                getArguments().getString("USER_ID"),
-//                                /*URLEncoder.encode */(etChatSend.getText().toString().trim())/*, "UTF-8")*/,
-//                                "m",
-//                                "",
-//                                "O");
+                        if (AppController.isSoundON().equals("ON")) {
+                            MediaPlayer mp = MediaPlayer.create(getActivity(), R.raw.beep4);
+                            mp.start();
+                        } else {
+                        }
+//
+                        Log.i("Replace Et", "" + URLEncoder.encode(etChatSend.getText().toString(), "UTF-8"));
+                        Toast.makeText(getActivity(), "" + etChatSend.getText().toString(), Toast.LENGTH_LONG).show();
+                        sendMessage("http://www.esolz.co.in/lab9/aiCafe/iosapp/sendSingleUser.php",
+                                AppData.loginDataType.getId(),
+                                getArguments().getString("USER_ID"),
+                                URLEncoder.encode(etChatSend.getText().toString(), "UTF-8"),
+                                "m",
+                                "",
+                                "O");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
-
+                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -316,40 +325,7 @@ public class FragmentSingleChat extends Fragment {
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("USER_ID", getArguments().getString("USER_ID"));
-                //bundle.putString("Page", "Chatroom");
-
-                if (getArguments().getString("Page").equals("FragmentUserInformation")) {
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    FragmentUserInformation fragmentUserInformation = new FragmentUserInformation();
-                    fragmentUserInformation.setArguments(bundle);
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentUserInformation);
-                    fragmentTransaction.commit();
-                } else if (getArguments().getString("Page").equals("FragmentAiCafeFriends")) {
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    FragmentAiCafeFriends fragmentAiCafeFriends = new FragmentAiCafeFriends();
-                    fragmentAiCafeFriends.setArguments(bundle);
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentAiCafeFriends);
-                    fragmentTransaction.commit();
-                } else if (getArguments().getString("Page").equals("FragmentInbox")) {
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    FragmentInbox fragmentInbox = new FragmentInbox();
-                    fragmentInbox.setArguments(bundle);
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentInbox);
-                    fragmentTransaction.commit();
-                } else if (getArguments().getString("Page").equals("FragmentAllFriend")) {
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    FragmentAllFriends fragmentAllFriends = new FragmentAllFriends();
-                    fragmentAllFriends.setArguments(bundle);
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentAllFriends);
-                    fragmentTransaction.commit();
-                } else {
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    FragmentProfile fragmentProfile = new FragmentProfile();
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
-                    fragmentTransaction.commit();
-                }
+                getActivity().onBackPressed();
             }
         });
 
@@ -436,7 +412,7 @@ public class FragmentSingleChat extends Fragment {
 
 //                Log.d("M send_id", sendID);
 //                Log.d("M rec_id", recID);
-               Log.d("M message", message);
+                Log.i("DHOP", "" + URL + "?send_id=" + sendID + "&rec_id=" + recID + "&message=" + message + "&type=" + type + "&stickername=" + stikername + "&chat_type=" + chatType);
 
                 return params;
             }

@@ -77,21 +77,11 @@ public class GCMIntentService extends IntentService {
                 final String name = extras.getString("name");
                 final String photo = extras.getString("photo");
                 final String photo_thumb = extras.getString("photo_thumb");
+                final String chat_type = extras.getString("chat_type");
 
-//                /*
-//                Bundle[{=, =Unread,
-//                from=104883704281,
-//                =Rahul.Roy, =s,
-//                =21,
-//                =userimage/normal/21_.jpg, =303,
-//                =test,
-//                =Y,
-//                =userimage/thumb/21_.jpg,
-//                =abc,
-//                =2015-07-24 19:25:37,
-//                =O, android.support.content.wakelockid=1,
-//                collapse_key=do_not_collapse, =43}]
-//                 */
+//                {"details":{"chat_id":1264,"send_from":"101","send_to":"45","message":"nabcdhhhhhh","type":"m",
+// "stickername":"sticker","chat_date":"2015-07-29","chat_time":"15:32:01","chat_type":"O","name":"koushik Sarkar","photo":"",
+//                        "photo_thumb":"","status":"Unread","file_link":"","file_available":"Y"},"status":"success"}
 
 
                 if (AppController.isAppRunning().equals("YES")) {
@@ -114,16 +104,26 @@ public class GCMIntentService extends IntentService {
                     brodIntent.putExtra("name", "" + name);
                     brodIntent.putExtra("photo", "" + photo);
                     brodIntent.putExtra("photo_thumb", "" + photo_thumb);
+                    brodIntent.putExtra("chat_type", "" + chat_type);
 
                     sendBroadcast(brodIntent);
 
                     Log.d("----TAG----", "Received new msg.....");
                 } else {
-                    if (type.equals("s")) {
-                        sendNotification(name + " sent a sticker ", "", send_to);
-                    } else if (type.equals("m")) {
-                        sendNotification(message, name, send_to);
-                    } else {
+                    try {
+                        if (AppController.isNotificationON().equals("ON")) {
+                            if (type.equals("s")) {
+                                sendNotification("Sent a sticker.", name, send_to);
+                            } else if (type.equals("m")) {
+                                sendNotification(message, name, send_to);
+                            } else {
+                                sendNotification(message, name, send_to);
+                            }
+                        } else {
+                            Log.i("NotificationState : ", AppController.isNotificationON());
+                        }
+                    } catch (Exception e) {
+                        Log.i("Receiver Exception : ", e.toString());
                         sendNotification(message, name, send_to);
                     }
                 }

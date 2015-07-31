@@ -12,34 +12,37 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
 import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
+import com.esolz.aicafeapp.Helper.ConnectionDetector;
 import com.esolz.aicafeapp.R;
 
 /**
- * Created by ltp on 08/07/15.
+ * Created by ltp on 31/07/15.
  */
-public class FragmentStoreNow extends Fragment {
+public class FragmentBluetoothSettings  extends Fragment {
 
     View view;
-    LinearLayout llPipeContainer, slidingNow, llBack, profileDrawer;
+    LinearLayout llPipeContainer, slidingNow, llBack;
     RelativeLayout rlMSGContainer;
     OpenSansSemiboldTextView txtPageTitle;
-    OpenSansRegularTextView txtMSGCounter;
+    OpenSansRegularTextView txtMSGCounter, txtError;
     ImageView imgBack, imgMSG;
     DrawerLayout drawerLayout;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
-    LinearLayout llStoreName, llHereNow, llStoreOffer, llFbLike;
+    ConnectionDetector cd;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_storenow, container, false);
+        view = inflater.inflate(R.layout.frag_notification_settings, container, false);
+
+        cd = new ConnectionDetector(getActivity());
 
         fragmentManager = getFragmentManager();
 
@@ -53,60 +56,39 @@ public class FragmentStoreNow extends Fragment {
         imgMSG = (ImageView) getActivity().findViewById(R.id.img_msg);
 
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        profileDrawer = (LinearLayout) getActivity().findViewById(R.id.profile_drawer);
-        //drawerLayout.closeDrawer(profileDrawer);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
+        if (cd.isConnectingToInternet()) {
 
-        llStoreName = (LinearLayout) view.findViewById(R.id.ll_store_name);
-        llHereNow = (LinearLayout) view.findViewById(R.id.ll_here_now);
-        llStoreOffer = (LinearLayout) view.findViewById(R.id.ll_store_offer);
-        llFbLike = (LinearLayout) view.findViewById(R.id.ll_fb_like);
+        } else {
+            Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+        }
 
-        llStoreName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        llPipeContainer.setVisibility(View.GONE);
+        slidingNow.setVisibility(View.GONE);
+        rlMSGContainer.setVisibility(View.GONE);
+        txtPageTitle.setVisibility(View.VISIBLE);
+        imgBack.setVisibility(View.VISIBLE);
+        llBack.setVisibility(View.VISIBLE);
+        imgMSG.setVisibility(View.GONE);
+        txtMSGCounter.setVisibility(View.GONE);
 
-            }
-        });
-        llHereNow.setOnClickListener(new View.OnClickListener() {
+        txtPageTitle.setText("Bluetooth Setting");
+
+        llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentAllFriends fragmentAllFriends = new FragmentAllFriends();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentAllFriends);
+                FragmentSettings fragmentSettings = new FragmentSettings();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentSettings);
                 int count = fragmentManager.getBackStackEntryCount();
                 fragmentTransaction.addToBackStack(String.valueOf(count));
                 fragmentTransaction.commit();
 
             }
         });
-        llStoreOffer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        llFbLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        llPipeContainer.setVisibility(View.VISIBLE);
-        slidingNow.setVisibility(View.VISIBLE);
-        rlMSGContainer.setVisibility(View.VISIBLE);
-        txtPageTitle.setVisibility(View.VISIBLE);
-        imgBack.setVisibility(View.GONE);
-        llBack.setVisibility(View.GONE);
-        imgMSG.setVisibility(View.GONE);
-        txtMSGCounter.setVisibility(View.GONE);
-
-        imgMSG.setBackgroundResource(R.drawable.chat);
-
-        txtPageTitle.setText("Store Now");
 
         return view;
     }
 }
+

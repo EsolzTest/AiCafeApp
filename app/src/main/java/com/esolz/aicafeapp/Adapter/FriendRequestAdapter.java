@@ -107,7 +107,7 @@ public class FriendRequestAdapter extends ArrayAdapter<FriendRequestPendingDataT
                 Toast.makeText(context, friendRequestPendingDataTypeArrayList.get(position).getId(), Toast.LENGTH_SHORT).show();
                 makeFriendRequestAccept("http://www.esolz.co.in/lab9/aiCafe/iosapp/friend_request_accept.php",
                         friendRequestPendingDataTypeArrayList.get(position).getId(),
-                        AppData.loginDataType.getId());
+                        AppData.loginDataType.getId(), position);
             }
         });
         holder.btnRequestReject.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +116,7 @@ public class FriendRequestAdapter extends ArrayAdapter<FriendRequestPendingDataT
                 Toast.makeText(context, friendRequestPendingDataTypeArrayList.get(position).getId(), Toast.LENGTH_SHORT).show();
                 makeFriendRequestReject("http://www.esolz.co.in/lab9/aiCafe/iosapp/friend_request_reject.php",
                         friendRequestPendingDataTypeArrayList.get(position).getId(),
-                        AppData.loginDataType.getId());
+                        AppData.loginDataType.getId(), position);
             }
         });
 
@@ -131,7 +131,7 @@ public class FriendRequestAdapter extends ArrayAdapter<FriendRequestPendingDataT
         LinearLayout btnRequestReject;
     }
 
-    private void makeFriendRequestAccept(final String URL, final String sendID, final String recID) {
+    private void makeFriendRequestAccept(final String URL, final String sendID, final String recID, final int position) {
 
         progressDialog.show();
         StringRequest sr = new StringRequest(Request.Method.POST, URL,
@@ -141,6 +141,7 @@ public class FriendRequestAdapter extends ArrayAdapter<FriendRequestPendingDataT
                         Log.d("Response ", stringResponse);
                         progressDialog.dismiss();
                         if (stringResponse.equals("accept")) {
+                            remove(friendRequestPendingDataTypeArrayList.get(position));
                             notifyDataSetChanged();
                         }
                     }
@@ -232,7 +233,7 @@ public class FriendRequestAdapter extends ArrayAdapter<FriendRequestPendingDataT
 
     }
 
-    private void makeFriendRequestReject(final String URL, final String sendID, final String recID) {
+    private void makeFriendRequestReject(final String URL, final String sendID, final String recID, final int position) {
 
         progressDialog.show();
         StringRequest sr = new StringRequest(Request.Method.POST, URL,
@@ -241,7 +242,8 @@ public class FriendRequestAdapter extends ArrayAdapter<FriendRequestPendingDataT
                     public void onResponse(String stringResponse) {
                         Log.d("Response ", stringResponse);
                         progressDialog.dismiss();
-                        if (stringResponse.equals("accept")) {
+                        if (stringResponse.equals("reject")) {
+                            remove(friendRequestPendingDataTypeArrayList.get(position));
                             notifyDataSetChanged();
                         }
                     }

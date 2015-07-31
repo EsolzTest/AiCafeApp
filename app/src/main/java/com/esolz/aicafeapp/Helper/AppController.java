@@ -20,10 +20,18 @@ public class AppController extends Application {
 
     private static AppController mInstance;
 
-    public  static SharedPreferences preferCheckAppState;
-    public  static SharedPreferences sateAppState;
-    public  static SharedPreferences.Editor edit;
+    public static SharedPreferences preferCheckAppState;
+    public static SharedPreferences sateAppState;
+    public static SharedPreferences.Editor edit;
     public String isAppRunning;
+
+    public static SharedPreferences checkNotificationSetting;
+    public static SharedPreferences.Editor editNotification;
+    public String isNotificationON;
+
+    public static SharedPreferences checkSoundSetting;
+    public static SharedPreferences.Editor editSound;
+    public String isSoundON;
 
     @Override
     public void onCreate() {
@@ -31,6 +39,28 @@ public class AppController extends Application {
         mInstance = this;
 
         preferCheckAppState = getSharedPreferences("CHECK_APP_STATE", Context.MODE_PRIVATE);
+        checkNotificationSetting = getSharedPreferences("CHECK_NOTIFICATION_SETTING", Context.MODE_PRIVATE);
+        checkSoundSetting = getSharedPreferences("CHECK_SOUND_SETTING", Context.MODE_PRIVATE);
+    }
+
+    public static String isSoundON() {
+        return checkSoundSetting.getString("SoundState", "");
+    }
+
+    public static void setIsSoundON(String isSoundON) {
+        editSound = checkSoundSetting.edit();
+        editSound.putString("SoundState", isSoundON);
+        editSound.commit();
+    }
+
+    public static String isNotificationON() {
+        return checkNotificationSetting.getString("NotificationState", "");
+    }
+
+    public static void setIsNotificationON(String isNotificationON) {
+        editNotification = checkNotificationSetting.edit();
+        editNotification.putString("NotificationState", isNotificationON);
+        editNotification.commit();
     }
 
     public static String isAppRunning() {

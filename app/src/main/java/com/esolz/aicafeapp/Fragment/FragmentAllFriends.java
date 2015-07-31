@@ -114,10 +114,11 @@ public class FragmentAllFriends extends Fragment {
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentStoreNow fragmentStoreNow = new FragmentStoreNow();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentStoreNow);
-                fragmentTransaction.commit();
+                getActivity().onBackPressed();
+//                fragmentTransaction = fragmentManager.beginTransaction();
+//                FragmentStoreNow fragmentStoreNow = new FragmentStoreNow();
+//                fragmentTransaction.replace(R.id.fragment_container, fragmentStoreNow);
+//                fragmentTransaction.commit();
             }
         });
 

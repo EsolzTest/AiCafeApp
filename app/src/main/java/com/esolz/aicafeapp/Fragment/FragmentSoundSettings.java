@@ -1,5 +1,8 @@
 package com.esolz.aicafeapp.Fragment;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,12 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -23,30 +25,21 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.esolz.aicafeapp.Adapter.FriendAdapter;
-import com.esolz.aicafeapp.Adapter.InboxAdapter;
 import com.esolz.aicafeapp.Customviews.OpenSansRegularTextView;
 import com.esolz.aicafeapp.Customviews.OpenSansSemiboldTextView;
-import com.esolz.aicafeapp.Datatype.FriendListDataType;
 import com.esolz.aicafeapp.Helper.AppController;
 import com.esolz.aicafeapp.Helper.AppData;
 import com.esolz.aicafeapp.Helper.ConnectionDetector;
 import com.esolz.aicafeapp.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by ltp on 08/07/15.
+ * Created by ltp on 31/07/15.
  */
-public class FragmentAiCafeFriends extends Fragment {
+public class FragmentSoundSettings extends Fragment {
 
     View view;
     LinearLayout llPipeContainer, slidingNow, llBack;
@@ -59,26 +52,28 @@ public class FragmentAiCafeFriends extends Fragment {
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
-    ListView listFriend;
-    ProgressBar pbarFriend;
-
-    ArrayList<FriendListDataType> friendListDataTypeArrayList;
-    FriendListDataType friendListDataType;
-
     ConnectionDetector cd;
 
-    final int CHUNK_SIZE = 10;
+    OpenSansSemiboldTextView txtNotification;
+    Switch switchSound;
 
-    int totalResponseValue = 0;
+    SharedPreferences sharedPreferencesSwitch;
+
+    ProgressDialog progressDialog;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_aicafefriends, container, false);
+        view = inflater.inflate(R.layout.frag_sound_settings, container, false);
 
         cd = new ConnectionDetector(getActivity());
 
         fragmentManager = getFragmentManager();
+
+        sharedPreferencesSwitch = getActivity().getSharedPreferences("SOUND", Context.MODE_PRIVATE);
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Please wait...");
 
         llPipeContainer = (LinearLayout) getActivity().findViewById(R.id.ll_pipe_container);
         slidingNow = (LinearLayout) getActivity().findViewById(R.id.slidingnow);
@@ -92,15 +87,61 @@ public class FragmentAiCafeFriends extends Fragment {
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        listFriend = (ListView) view.findViewById(R.id.list_friend);
-        pbarFriend = (ProgressBar) view.findViewById(R.id.pbar_friend);
-        txtError = (OpenSansRegularTextView) view.findViewById(R.id.txt_error);
-        txtError.setVisibility(View.GONE);
+        txtNotification = (OpenSansSemiboldTextView) view.findViewById(R.id.txt_sound);
+        switchSound = (Switch) view.findViewById(R.id.switch_sound);
 
-        if (cd.isConnectingToInternet()) {
-            makeJsonObjectRequest("http://www.esolz.co.in/lab9/aiCafe/iosapp/friend_list.php", AppData.loginDataType.getId());
+        // switchNotification.setChecked(false);
+        try {
+            if (sharedPreferencesSwitch.getString("Sound", "").equals("OFF")) {
+                switchSound.setChecked(false);
+            } else {
+                switchSound.setChecked(true);
+            }
+        } catch (Exception e) {
+            Log.i("Sound Problrm  ", e.toString());
+        }
+        switchSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (cd.isConnectingToInternet()) {
+                    if (isChecked) {
+                        txtNotification.setText("ON");
+//                        SharedPreferences.Editor editor = sharedPreferencesSwitch.edit();
+//                        editor.putString("SWITCH", "ON");
+//                        editor.commit();
+
+                        AppController.setIsSoundON("ON");
+                        setSoundSettings(
+                                "http://www.esolz.co.in/lab9/aiCafe/iosapp/insert_status.php",
+                                AppData.loginDataType.getId(),
+                                "Y"
+                        );
+                    } else {
+                        txtNotification.setText("OFF");
+//                        SharedPreferences.Editor editor = sharedPreferencesSwitch.edit();
+//                        editor.putString("SWITCH", "OFF");
+//                        editor.commit();
+
+                        AppController.setIsSoundON("OFF");
+                        setSoundSettings(
+                                "http://www.esolz.co.in/lab9/aiCafe/iosapp/insert_status.php",
+                                AppData.loginDataType.getId(),
+                                "N"
+                        );
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        if (switchSound.isChecked()) {
+            txtNotification.setText("ON");
         } else {
-            Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+            txtNotification.setText("OFF");
         }
 
         llPipeContainer.setVisibility(View.GONE);
@@ -112,14 +153,14 @@ public class FragmentAiCafeFriends extends Fragment {
         imgMSG.setVisibility(View.GONE);
         txtMSGCounter.setVisibility(View.GONE);
 
-        txtPageTitle.setText("AiCafe Friends");
+        txtPageTitle.setText("Sound Setting");
 
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentProfile fragmentProfile = new FragmentProfile();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentProfile);
+                FragmentSettings fragmentSettings = new FragmentSettings();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentSettings);
                 int count = fragmentManager.getBackStackEntryCount();
                 fragmentTransaction.addToBackStack(String.valueOf(count));
                 fragmentTransaction.commit();
@@ -130,79 +171,50 @@ public class FragmentAiCafeFriends extends Fragment {
         return view;
     }
 
-    private void makeJsonObjectRequest(final String URL, final String ID) {
+    public void setSoundSettings(final String URL, final String ID, final String SOUND) {
 
-        pbarFriend.setVisibility(View.VISIBLE);
+        progressDialog.show();
+
         StringRequest sr = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String stringResponse) {
                         Log.d("Response ", stringResponse);
+                        progressDialog.dismiss();
                         try {
-                            JSONObject response = new JSONObject(stringResponse);
-                            totalResponseValue = response.getInt("total");
+                            if (stringResponse.equals("success")) {
+                                if (sharedPreferencesSwitch.getString("Sound", "").equals("OFF")) {
+                                    SharedPreferences.Editor editor = sharedPreferencesSwitch.edit();
+                                    editor.putString("Sound", "ON");
+                                    editor.commit();
+                                    AppController.setIsSoundON("ON");
+                                } else {
+                                    SharedPreferences.Editor editor = sharedPreferencesSwitch.edit();
+                                    editor.putString("Sound", "OFF");
+                                    editor.commit();
 
-                            if (response.getString("auth").equals("success")) {
-                                JSONArray jsonArray = response.getJSONArray("details");
-                                friendListDataTypeArrayList = new ArrayList<FriendListDataType>();
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    friendListDataType = new FriendListDataType(
-                                            jsonObject.getString("id"),
-                                            jsonObject.getString("name"),
-                                            jsonObject.getString("sex"),
-                                            jsonObject.getString("email"),
-                                            "",
-                                            jsonObject.getString("about"),
-                                            jsonObject.getString("business"),
-                                            jsonObject.getString("dob"),
-                                            jsonObject.getString("photo"),
-                                            jsonObject.getString("photo_thumb"),
-                                            jsonObject.getString("registerDate"),
-                                            jsonObject.getString("facebookid"),
-                                            jsonObject.getString("last_sync"),
-                                            jsonObject.getString("fb_pic_url"),
-                                            "" + jsonObject.getInt("age"),
-                                            jsonObject.getString("online"),
-                                            jsonObject.getString("last_chat")
-                                    );
-
-                                    friendListDataTypeArrayList.add(friendListDataType);
-                                    FriendAdapter friendAdapter = new FriendAdapter(
-                                            getActivity(),
-                                            0,
-                                            0,
-                                            friendListDataTypeArrayList,
-                                            totalResponseValue,
-                                            pbarFriend,
-                                            listFriend);
-                                    listFriend.setAdapter(friendAdapter);
+                                    txtNotification.setText("OFF");
+                                    AppController.setIsSoundON("OFF");
                                 }
-                            } else {
-                                txtError.setVisibility(View.VISIBLE);
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             Log.d("JSONException", e.toString());
                             Toast.makeText(getActivity(), "Server not responding...", Toast.LENGTH_SHORT).show();
                         }
-                        pbarFriend.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("Output : ", "Error: " + error.getMessage());
-                Toast.makeText(getActivity(),
-                        "Server not responding...!", Toast.LENGTH_LONG)
-                        .show();
-                // pBAR.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), "Server not responding...!", Toast.LENGTH_LONG).show();
             }
         }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("id", ID);
-                params.put("start", "0");
-                params.put("records", "" + CHUNK_SIZE);
+                params.put("mode", "sound");
+                params.put("sound", SOUND);
                 return params;
             }
 
@@ -217,4 +229,3 @@ public class FragmentAiCafeFriends extends Fragment {
         AppController.getInstance().addToRequestQueue(sr);
     }
 }
-
